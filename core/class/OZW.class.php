@@ -216,7 +216,7 @@ class OZW extends eqLogic
         $obj = OZW::OZW_api($carte, 'menutree/device_root.json?SessionId=%id%&SerialNumber=' . $this->getConfiguration('SerialNr') . '&TreeName=Mobile');
         if ($obj['Result']['Success'] == 'true') {
             if (isset($obj['TreeItem']['Id'])) {
-                $this->ImporterUnMenu($obj['TreeItem']['Id']);
+                $this->MenuImport($obj['TreeItem']['Id']);
             } else {
                 log::add('OZW', 'debug', 'Cannot Find TreeItem : ' . $obj['Result']['Error']['Txt']);
             }
@@ -235,13 +235,13 @@ class OZW extends eqLogic
 
         if (isset($obj['DatapointItems'])) {
             foreach ($obj['DatapointItems'] as $item) {
-                $this->create_commande($item['Id'], 'X', '', '');
+                $this->create_command($item['Id'], 'X', '', '');
             }
             foreach ($obj['WidgetItems'] as $item) {
-                $this->ImporterUnMenu($item['Id']);
+                $this->MenuImport($item['Id']);
             }
             foreach ($obj['MenuItems'] as $item) {
-                $this->ImporterUnMenu($item['Id']);
+                $this->MenuImport($item['Id']);
             }
         }
     }

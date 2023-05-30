@@ -2,7 +2,7 @@
 
 Plugin permettant de s'interfacer avec les centrales de communication SIEMENS de type OZW (modèles OZW672 et OZW772). 
 
-Les centrales de communication OZW sont utilisés pour communiquer avec les cartes pilotant de nombreuses chaudières, pompes à chaleur et autres dispositifs industriels. Celles-ci proposent un serveur WEB embarqué à partir duquel on peut piloter les dispositifs qui y sont connectés.
+Les centrales de communication OZW sont utilisées pour communiquer avec les cartes pilotant de nombreuses chaudières, pompes à chaleur et autres dispositifs industriels. Celles-ci proposent un serveur WEB embarqué à partir duquel on peut piloter les dispositifs qui y sont connectés.
 
 La communication s'effectue via les WEB APIs fournies par SIEMENS qui permettent de simuler les interactions réalisées normalement sur le serveur WEB.
 
@@ -21,90 +21,113 @@ Une fois l'installation effectuée, on doit trouver une page WEB qui ressemble �
 Dans cette configuration, on trouve 2 devices:
 
 -   le premier représente une carte LMS14 pilotant une chaudière
--   le second représente la centrale de communication OWZ
+-   le second représente la centrale de communication OWZ672
 
 ![OZW_device](../images/OZW_device.png)
 
 Les différents datapoints définis pour la carte sont accessibles. Il est possible de les consulter et éventuellement de les modifier.
 
+Dans les APIs fournies par SIEMENS, les datapoints doivent être spécifiés via la référence que l'on peut trouver dans l'interface WEB.
 
-# Récupération des informations de connexion
+![OZW_datapoint_reference](../images/OZW_datapoint_reference.png)
 
-Pour accéder aux données de votre Ecocompteur, vous devez posséder un client\_id et un client\_secret générés sur le site <https://dev.netatmo.com>.
+Pour la trouver, se placer sur la ligne correspondante et lancer l'inspection de l'élément ( en général Click-droit puis Inspecter ). Dans le code correspondant, on trouve un numéro dans l'instruction 'openDialog('xxx') ' ou 'id='dpxxx' qui indique la référence, 591 dans l'exemple ci-dessus.
 
-Si ce n'est déjà fait, créer un compte <https://auth.netatmo.com/fr-fr/access/signup?next_url=https%3A%2F%2Fdev.netatmo.com%2Fbusiness-showcase>
+![OZW_ID_menu](../images/OZW_ID_menu.png)
 
-![apps](../images/apps.png)
-
-Une fois identifié, aller sur le menu des applications ( <https://dev.netatmo.com/apps/> ) puis cliquer sur 'Create'. 
-
-![app](../images/app.png)
-
-Remplir le formulaire et cliquer sur 'Save'.
-
-![secret](../images/secret.png)
-
-Le 'client ID' et le 'client secret' sont générés. Vous pouvez les utiliser pour configurer le plugin.
+De même, l'ID d'un menu peut être nécessaire et est touvée de la même façon, 590 dans l'exemple ci-dessus.
 
 # Configuration du plugin
 
 Une fois le plugin installé, il faut l'activer et renseigner vos informations de connexion Netatmo :
 
-![configuration](../images/configuration.png)
-
--   **Client ID** : votre client ID (voir ci-dessus)
--   **Client secret** : votre client secret (voir ci-dessus)
--   **Nom d’utilisateur** : nom d’utilisateur de votre compte netatmo
--   **Mot de passe** : mot de passe de votre compte Netatmo
-
-![log](../images/log.png)
-
 Vous pouvez activer le niveau de log Debug pour suivre l'activité du plugin et identifier les éventuels problèmes.
 
 # Configuration des équipements
 
-La configuration des équipements Netatmo est accessible à partir du menu du plugin (menu Plugins, Energie puis EcoNetAtmo) :
+La configuration des équipements est accessible à partir du menu du plugin (menu Plugins, Objets Connectés puis OZW). Cliquer sur Ajouter pour définir l'OZW.
 
-![synchronisation](../images/synchronisation.png)
+![OZW_Equipement_OZW](../images/OZW_Equipement_OZW.png)
 
-Cliquer sur Synchronisation pour lancer la création des équipements. L'API /homesdata est utilisée pour récuperer les informations (voir <https://dev.netatmo.com/apidocumentation/control#homesdata>).
+Indiquer la configuration de l'OZW :
 
-![equipements](../images/equipements.png)
-
-Les compteurs des lignes électriques sont créés. Il y a un équipement par ligne. 
-
-![equipement](../images/equipement.png)
-
-Vous retrouvez dans l'onglet 'Equipement' toute la configuration de votre équipement :
-
--   **Nom** : nom de votre compteur (celui-ci est repris de la configuration de Netatmo)
+-   **Nom** : nom de l'OZW
 -   **Objet parent** : indique l’objet parent auquel appartient l’équipement
 -   **Catégorie** : indique la catégorie Jeedom de l’équipement
 -   **Activer** : permet de rendre votre équipement actif
 -   **Visible** : le rend visible sur le dashboard
--   **Module ID** : indique l'identifiant unique de l’équipement chez Netatmo
--   **Consumption Type** : indique le type de votre équipement chez Netatmo
--   **Source Type** : indique la source d'énergie de votre équipement chez Netatmo
+-   **Adresse IP** : IP de l’équipement
+-   **Compte et mot de passe** : codes d'accès au WEB server
+-   **Durée d'une session** : période après laquelle le session ID est renouvelé
 -   **Icone** : permet de sélectionner un type d'icône pour votre équipement dans le paneau de configuration
-  
-  Le bouton 'Importer les compteurs' permet de créer les commandes correspondant à l'équipement. Ceci est fait lors de la création de l'équipement et n'est utile que si vous avez supprimé une commande.
 
-  ![commandes](../images/commandes.png)
+Après avoir sauvegardé l'OZW, les boutons suivants sont actifs:
 
-Vous retrouvez dans l'onglet 'Commandes' la liste des commandes (celles-ci sont générées lors de la création de l'équipement).
+-   **Accéder à l'OZW'** : permet d'ouvrir une session WEB sur l'OZW
+-   **Importer les devices** :  permet d'importer les équipements correpondant aux devices attachés à l'OZW
 
-La commande action 'Refresh' permet de lancer la récupération immédiate des valeurs des compteurs. Par défaut, une récupération est lancée toutes les 10 minutes.
+![OZW_Equipement_OZW_devices](../images/OZW_Equipement_OZW_devices.png)
 
-Les autres commandes correspondent aux compteurs renseignés par Netatmo (voir l'API /getmesure <https://dev.netatmo.com/apidocumentation/control#getmeasure> ). Pour chacun d'eux, on trouve en plus des valeurs habituelles de Jeedom : 
+Dans l'exemple ci-dessus, on trouve après l'importation des devices :
 
--   le nom affiché sur le dashboard
--   le logicalID qui correspond au 'type' dans l'API de Netatmo
--   la possibilité d'activer ou non la récupération du compteur
--   la période qui correspond au 'scale' dans l'API de Netatmo (pour laquelle on souhaite récupérer les données, seules les valeurs autorisées par l'API Netatmo sont présentées)
+- l'OZW672 en tant qu'équipement principal
+- l'OZW672.01 en tant que device
+- la carte LMS14 gérant la chaudière
+
+![OZW_Equipement_OZW_device](../images/OZW_Equipement_OZW_device.png)
+
+Il est possible d'associer une icone spécifique au device. On peut également personaliser une icone de type perso en ajoutant l'image correspondante dans le répertoire plugin_info du plugin.
+
+# Commandes associées aux équipements
+
+![OZW_Commandes](../images/OZW_Commandes.png)
+
+Pour l'OZW, 2 commandes de type info sont créées :
+
+- Etat : égal à 1 lorsque la communication est établie avec le WEB serveur, 0 dans le cas contraire
+- SessionID : ID utilisé par les WEB APIs
+
+![OZW_Commandes_device_initial](../images/OZW_Commandes_device_initial.png)
+
+Pour les devices attachés à l'OZW, une commande de type info est créée :
+
+- Dernier Refresh : indique quand la dernière information du device a été mise à jour
+
+![OZW_Importer_Menu_principal](../images/OZW_Importer_Menu_principal.png)
+
+Le bouton 'Importer les commandes principales' dans l'onglet équipement permet d'importer tous les datapoints du menu appelé 'mobile'. Celui-ci est proposé dans l'application Android et n'est pas disponible pour tous les devices. La création des commandes peut prendre plusieurs minutes. Après exécution, on trouve les principaux datapoints du device définis comme des commandes de type info.
+
+![OZW_import_menu_specifique](../images/OZW_import_menu_specifique.png)
+
+De même, le bouton 'Importer menu'  dans l'onglet équipement permet d'importer tous les datapoints d'un menu spécifique.
+
+
+![OZW_boutons_import_commande](../images/OZW_boutons_import_commande.png)
+
+Dans l'onglt 'Commandes', les boutons suivants sont disponibles :
+
+- Importer un datapoint : permet de créer une commande info pour un datapoint spécifique
+- Ajouter une action : permet de modifier la valeur du datapoint (lorsque c'est permis dans le WEB serveur
+- Ajouter une commande refresh : permet de forcer la récupération de la valeur du datapoint
+
+Attention à bien fournir la référence du datapoint dans l'interface WEB et non le numéro de ligne affiché sur la ligne du datapoint.
+
+# Analyse des champs de la commande
+
+![OWZ_Analyse_commande](../images/OWZ_Analyse_commande.png)
+
+Pour chaque commande relative à un datapoint, on trouve en plus des champs habituels de jeedom :
+é
+- le LogicalID: 
+  - pour les commandes de type info, égal à la référence de la commande
+  - pour les commandes action, égal à 'A_' suivi de la référence de la commande
+  - pour les commandes refresh, égal à 'R_' suivi de la référence de la commande
+- la coche update qui permet de demander ou non la mise à jour du datapoint
+- le cghamp scan qui indique la fréquence de mise à jour du datapoint
 
 # Widget
 
-![widget](../images/widget.png)
+![OZW_widget](../images/OZW_widget.png)
 
 Voici le widget standard. 
 
@@ -114,6 +137,4 @@ Voici le widget standard.
 >
 >Le plugin récupère les informations toutes les 10 minutes. Cependant, l'écocompoteur envoie ses relevés environ toutes les 3 heures aussi on peut observer ce décalage dans la récupération des données.
 
->**Puis-je récupérer les compteurs pour le gaz et l'eau ?**
->
->Le plugin est capable de le faire. Malheureusement, l'API de Netatmo ne spécifie pas quel est le 'type' à utiliser pour la récupération de ces valeurs. Une demande a été faite à l'équipe en charge du développement de l'API mais aucune réponse n'a encore été fournie.
+
