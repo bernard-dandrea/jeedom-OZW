@@ -27,11 +27,11 @@ Dans cette configuration, on trouve 2 devices:
 
 Les différents datapoints définis pour la carte sont accessibles. Il est possible de les consulter et éventuellement de les modifier.
 
-Dans les APIs fournies par SIEMENS, les datapoints doivent être spécifiés via la référence que l'on peut trouver dans l'interface WEB.
+Dans les APIs fournies par SIEMENS, les datapoints doivent être spécifiés via leur référence WEB que l'on peut trouver dans l'interface WEB.
 
 ![OZW_datapoint_reference](../images/OZW_datapoint_reference.png)
 
-Pour la trouver, se placer sur la ligne correspondante et lancer l'inspection de l'élément ( en général Click-droit puis Inspecter ). Dans le code correspondant, on trouve un numéro dans l'instruction 'openDialog('xxx') ' ou 'id='dpxxx' qui indique la référence, 591 dans l'exemple ci-dessus.
+Pour la trouver, se placer sur la ligne correspondante et lancer l'inspection de l'élément ( en général Click-droit puis Inspecter ). Dans le code correspondant, on trouve un numéro dans l'instruction 'openDialog('xxx') ' ou 'id='dpxxx' qui indique la référence WEB, 591 dans l'exemple ci-dessus.
 
 ![OZW_ID_menu](../images/OZW_ID_menu.png)
 
@@ -39,13 +39,15 @@ De même, l'ID d'un menu peut être nécessaire et est touvée de la même faço
 
 # Configuration du plugin
 
-Une fois le plugin installé, il faut l'activer et renseigner vos informations de connexion Netatmo :
+Une fois le plugin installé, il faut l'activer.
 
 Vous pouvez activer le niveau de log Debug pour suivre l'activité du plugin et identifier les éventuels problèmes.
 
 # Configuration des équipements
 
-La configuration des équipements est accessible à partir du menu du plugin (menu Plugins, Objets Connectés puis OZW). Cliquer sur Ajouter pour définir l'OZW.
+La configuration des équipements est accessible à partir du menu du plugin (menu Plugins, Objets Connectés puis OZW). 
+
+Cliquer sur Ajouter pour définir l'OZW.
 
 ![OZW_Equipement_OZW](../images/OZW_Equipement_OZW.png)
 
@@ -63,8 +65,8 @@ Indiquer la configuration de l'OZW :
 
 Après avoir sauvegardé l'OZW, les boutons suivants sont actifs:
 
--   **Accéder à l'OZW'** : permet d'ouvrir une session WEB sur l'OZW
--   **Importer les devices** :  permet d'importer les équipements correpondant aux devices attachés à l'OZW
+-   **Accéder à l'OZW** : permet d'ouvrir une session WEB sur l'OZW
+-   **Importer les devices** :  permet d'importer les équipements correpondant aux devices attachés à l'OZW.
 
 ![OZW_Equipement_OZW_devices](../images/OZW_Equipement_OZW_devices.png)
 
@@ -76,7 +78,7 @@ Dans l'exemple ci-dessus, on trouve après l'importation des devices :
 
 ![OZW_Equipement_OZW_device](../images/OZW_Equipement_OZW_device.png)
 
-Il est possible d'associer une icone spécifique au device. On peut également personaliser une icone de type perso en ajoutant l'image correspondante dans le répertoire plugin_info du plugin.
+Il est possible d'associer une icone spécifique au device. On peut également personaliser une icone de type perso en ajoutant l'image correspondante (par exemple perso1.png pour l'icone perso1) dans le répertoire plugin_info du plugin.
 
 # Commandes associées aux équipements
 
@@ -104,26 +106,26 @@ De même, le bouton 'Importer menu'  dans l'onglet équipement permet d'importer
 
 ![OZW_boutons_import_commande](../images/OZW_boutons_import_commande.png)
 
-Dans l'onglt 'Commandes', les boutons suivants sont disponibles :
+Dans l'onglet 'Commandes', les boutons suivants sont disponibles :
 
 - Importer un datapoint : permet de créer une commande info pour un datapoint spécifique
-- Ajouter une action : permet de modifier la valeur du datapoint (lorsque c'est permis dans le WEB serveur
+- Ajouter une action : permet de modifier la valeur du datapoint (lorsque c'est permis dans le WEB serveur)
 - Ajouter une commande refresh : permet de forcer la récupération de la valeur du datapoint
 
-Attention à bien fournir la référence du datapoint dans l'interface WEB et non le numéro de ligne affiché sur la ligne du datapoint.
+**Attention à bien fournir la référence WEB du datapoint et non le numéro de ligne affiché sur la ligne du datapoint.**
 
 # Analyse des champs de la commande
 
 ![OWZ_Analyse_commande](../images/OWZ_Analyse_commande.png)
 
 Pour chaque commande relative à un datapoint, on trouve en plus des champs habituels de jeedom :
-é
+
 - le LogicalID: 
-  - pour les commandes de type info, égal à la référence de la commande
-  - pour les commandes action, égal à 'A_' suivi de la référence de la commande
-  - pour les commandes refresh, égal à 'R_' suivi de la référence de la commande
+  - pour les commandes de type info, égal à la référence WEB du datapoint
+  - pour les commandes action, égal à 'A_' suivi de la référence WEB du datapoint
+  - pour les commandes refresh, égal à 'R_' suivi de la référence WEB du datapoint
 - la coche update qui permet de demander ou non la mise à jour du datapoint
-- le cghamp scan qui indique la fréquence de mise à jour du datapoint
+- le champ scan qui indique la fréquence de mise à jour du datapoint
 
 # Widget
 
@@ -133,8 +135,8 @@ Voici le widget standard.
 
 # FAQ
 
->**Quelle est la fréquence de rafraîchissement ?**
+>**Pourqoui ai-je des messages 'l OZW ne répond pas' ?**
 >
->Le plugin récupère les informations toutes les 10 minutes. Cependant, l'écocompoteur envoie ses relevés environ toutes les 3 heures aussi on peut observer ce décalage dans la récupération des données.
+>Il arrive que le serveur WEN+B ne réagisse plus que ce soit via l'interface WEB ou les APIs. Après un certain temps (de quelques             Le plugin récupère les informations toutes les 10 minutes. Cependant, l'écocompoteur envoie ses relevés environ toutes les 3 heures aussi on peut observer ce décalage dans la récupération des données.
 
 
