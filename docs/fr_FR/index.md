@@ -1,16 +1,25 @@
 # Plugin OZW
 
-Plugin permettant de s'interfacer avec les centrales de communication SIEMENS de type OZW (modèles OZW672 et OZW772). 
+Plugin permettant de s'interfacer avec les centrales de communication SIEMENS de type OZW. 
 
 Les centrales de communication OZW sont utilisées pour communiquer avec les cartes pilotant de nombreuses chaudières, pompes à chaleur et autres dispositifs industriels. Celles-ci proposent un serveur WEB embarqué à partir duquel on peut piloter les dispositifs qui y sont connectés.
 
-La communication s'effectue via les WEB APIs fournies par SIEMENS qui permettent de simuler les interactions réalisées normalement sur le serveur WEB.
+Il existe deux modèles au fonctionnement à peu près identique
+
+- OZW672 pour la communication avec les devices directement sur le bus LPB,BSB
+- OZW672 pour la communication avec les devices via le protocole KNX. 
+
+La communication entre le plugin et l'OZW s'effectue via les WEB APIs fournies par SIEMENS qui permettent de simuler les interactions réalisées normalement sur le serveur WEB.
 
 Ce plugin est une évolution majeure du plugin OZW672 ( voir https://github.com/NextDom/plugin-ozw672 ) qui n'est plus maintenu et ne fonctionne plus dans la version actuelle de Jeedom.
 
 # Installation et configuration du controleur OZW
 
 Pour l'installation de la centrale de communication WEB, se référer à la documentation SIEMENS correpondante.
+
+![OZW_WEB_ACCESS](../images/OZW_WEB_ACCESS.png)
+
+Activer l'accès aux WEB apis (menu Home > 0.5 OZWx72.01 > Settings > Communication > Services)
 
 Le plugin a été testé avec une version 12 du WEB serveur. A priori, le plugin devrait fonctionner avec des versions antérieures car les appels API sont assez basiques et doivent exister depuis de nombreuses versions.
 
