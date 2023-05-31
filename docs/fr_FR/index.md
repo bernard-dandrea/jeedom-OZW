@@ -4,14 +4,14 @@ Plugin permettant de s'interfacer avec les centrales de communication SIEMENS de
 
 Les centrales de communication OZW sont utilisées pour communiquer avec les cartes pilotant de nombreuses chaudières, pompes à chaleur et autres dispositifs industriels. Celles-ci proposent un serveur WEB embarqué à partir duquel on peut piloter les dispositifs qui y sont connectés.
 
-Il existe deux modèles au fonctionnement à peu près identique
+Il existe deux modèles au fonctionnement à peu près identique :
 
 - OZW672 pour la communication avec les devices directement sur le bus LPB,BSB
-- OZW672 pour la communication avec les devices via le protocole KNX. 
+- OZW772 pour la communication avec les devices via le protocole KNX
 
 La communication entre le plugin et l'OZW s'effectue via les WEB APIs fournies par SIEMENS qui permettent de simuler les interactions réalisées normalement sur le serveur WEB.
 
-Ce plugin est une évolution majeure du plugin OZW672 ( voir https://github.com/NextDom/plugin-ozw672 ) qui n'est plus maintenu et ne fonctionne plus dans la version actuelle de Jeedom.
+Ce plugin est une évolution majeure du plugin OZW672 (voir https://github.com/NextDom/plugin-ozw672) qui n'est plus maintenu et ne fonctionne pas dans la version actuelle de Jeedom.
 
 # Installation et configuration du controleur OZW
 
@@ -40,7 +40,7 @@ Dans les APIs fournies par SIEMENS, les datapoints doivent être spécifiés via
 
 ![OZW_datapoint_reference](../images/OZW_datapoint_reference.png)
 
-Pour la trouver, se placer sur la ligne correspondante et lancer l'inspection de l'élément ( en général Click-droit puis Inspecter ). Dans le code correspondant, on trouve un numéro dans l'instruction 'openDialog('xxx') ' ou 'id='dpxxx' qui indique la référence WEB, 591 dans l'exemple ci-dessus.
+Pour la trouver, se placer sur la ligne correspondante et lancer l'inspection de l'élément (en général Click-droit puis Inspecter). Dans le code correspondant, on trouve un numéro dans l'instruction 'openDialog('xxx') ' ou 'id='dpxxx' qui indique la référence WEB, 591 dans l'exemple ci-dessus.
 
 ![OZW_ID_menu](../images/OZW_ID_menu.png)
 
