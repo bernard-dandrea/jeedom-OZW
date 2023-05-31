@@ -19,9 +19,9 @@ Pour l'installation de la centrale de communication WEB, se référer à la docu
 
 ![OZW_WEB_ACCESS](../images/OZW_WEB_ACCESS.png)
 
-Activer l'accès aux WEB apis (menu Home > 0.5 OZWx72.01 > Settings > Communication > Services)
+Activer l'accès aux WEB APIs (menu Home > 0.5 OZWx72.01 > Settings > Communication > Services).
 
-Le plugin a été testé avec une version 12 du WEB serveur. A priori, le plugin devrait fonctionner avec des versions antérieures car les appels API sont assez basiques et doivent exister depuis de nombreuses versions.
+Le plugin a été testé avec une version 12 du WEB serveur. A priori, le plugin devrait fonctionner avec des versions antérieures car les appels aux APIs sont assez basiques et doivent exister depuis de nombreuses versions.
 
 ![OZW_accueil](../images/OZW_accueil.png)
 
@@ -30,7 +30,7 @@ Une fois l'installation effectuée, on doit trouver une page WEB qui ressemble �
 Dans cette configuration, on trouve 2 devices:
 
 -   le premier représente une carte LMS14 pilotant une chaudière
--   le second représente la centrale de communication OWZ672
+-   le second représente la centrale de communication OWZ672 et permet sa configuration
 
 ![OZW_device](../images/OZW_device.png)
 
@@ -65,12 +65,12 @@ Indiquer la configuration de l'OZW :
 -   **Nom** : nom de l'OZW
 -   **Objet parent** : indique l’objet parent auquel appartient l’équipement
 -   **Catégorie** : indique la catégorie Jeedom de l’équipement
--   **Activer** : permet de rendre votre équipement actif
+-   **Activer** : permet de rendre l'équipement actif
 -   **Visible** : le rend visible sur le dashboard
 -   **Adresse IP** : IP de l’équipement
 -   **Compte et mot de passe** : codes d'accès au WEB server
 -   **Durée d'une session** : période après laquelle le session ID est renouvelé
--   **Icone** : permet de sélectionner un type d'icône pour votre équipement dans le paneau de configuration
+-   **Icone** : permet de sélectionner un type d'icône pour l'équipement dans le paneau de configuration
 
 Après avoir sauvegardé l'OZW, les boutons suivants sont actifs:
 
@@ -106,11 +106,11 @@ Pour les devices attachés à l'OZW, une commande de type info est créée :
 
 ![OZW_Importer_Menu_principal](../images/OZW_Importer_Menu_principal.png)
 
-Le bouton 'Importer les commandes principales' dans l'onglet équipement permet d'importer tous les datapoints du menu appelé 'mobile'. Celui-ci est proposé dans l'application Android et n'est pas disponible pour tous les devices. La création des commandes peut prendre plusieurs minutes. Après exécution, on trouve les principaux datapoints du device définis comme des commandes de type info.
+Le bouton 'Importer les commandes principales' dans l'onglet équipement permet d'importer tous les datapoints du menu appelé 'mobile'. Celui-ci est proposé dans l'application Android fournie par SIEMENS et n'est pas disponible pour tous les devices. La création des commandes peut prendre plusieurs minutes. Après exécution, on trouve les principaux datapoints du device définis comme des commandes de type info.
 
 ![OZW_import_menu_specifique](../images/OZW_import_menu_specifique.png)
 
-De même, le bouton 'Importer menu'  dans l'onglet équipement permet d'importer tous les datapoints d'un menu spécifique.
+De même, le bouton 'Importer menu'  dans l'onglet équipement permet d'importer tous les datapoints d'un menu spécifique. Pour cela, il faut fournir la référence WEB du menu.
 
 
 ![OZW_boutons_import_commande](../images/OZW_boutons_import_commande.png)
@@ -121,7 +121,7 @@ Dans l'onglet 'Commandes', les boutons suivants sont disponibles :
 - Ajouter une action : permet de modifier la valeur du datapoint (lorsque c'est permis dans le WEB serveur)
 - Ajouter une commande refresh : permet de forcer la récupération de la valeur du datapoint
 
-**Attention à bien fournir la référence WEB du datapoint et non le numéro de ligne affiché sur la ligne du datapoint.**
+**Attention** : bien fournir la référence WEB du datapoint et non le numéro de ligne affiché sur la ligne du datapoint.
 
 # Analyse des champs de la commande
 
@@ -140,7 +140,7 @@ Pour chaque commande relative à un datapoint, on trouve en plus des champs habi
 
 ![OZW_widget](../images/OZW_widget.png)
 
-Voici le widget standard. 
+Voici un exemple de widget. On peut modifier le nom des commandes pour refléter le numéro de ligne indiqué dans le serveur WEB. 
 
 # FAQ
 
