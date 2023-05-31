@@ -135,8 +135,11 @@ Voici le widget standard.
 
 # FAQ
 
->**Pourqoui ai-je des messages 'l OZW ne répond pas' ?**
+>**Pourquoi ai-je des messages 'l OZW ne répond pas' ?**
 >
->Il arrive que le serveur WEN+B ne réagisse plus que ce soit via l'interface WEB ou les APIs. Après un certain temps (de quelques             Le plugin récupère les informations toutes les 10 minutes. Cependant, l'écocompoteur envoie ses relevés environ toutes les 3 heures aussi on peut observer ce décalage dans la récupération des données.
+>Cela résulte d'un problème de communication avec le serveur.
 
+>Il arrive que le serveur WEB ne réagisse plus que ce soit via l'interface WEB ou les APIs. Après un certain temps (de quelques  minutes à quelques heures), la connexion s'établit de nouveau. Dans le pire des cas, il faut redémarrer l'OZW.
+
+>L'origine du problème est inconnue: il s'agit peut-être d'un bug du serveur de communication.
 
