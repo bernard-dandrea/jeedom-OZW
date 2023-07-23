@@ -305,7 +305,7 @@ class OZW extends eqLogic
             $cmd->setLogicalId($item_id);   // le logical id est égal à l'id du datapoint
             $cmd->setIsVisible(1);
             $cmd->setConfiguration('isPrincipale', '0');
-            $cmd->setOrder($item_id . '0');
+            $cmd->setOrder(time());
             $cmd->setConfiguration('isCollected', '1');
             $cmd->setConfiguration('internal_type', $type);
             log::add('OZW', 'debug', 'Type : ' . $type);
@@ -441,7 +441,7 @@ class OZW extends eqLogic
             if (is_object($cmd_info)) {
                 $cmd->setValue($cmd_info->getID()); // cmmande info liée
             }
-            $cmd->setOrder($item_id . '1');
+            $cmd->setOrder(time());
             $cmd->setConfiguration('internal_type', $type);
 
             switch ($obj_detail['Description']['Type']) {
@@ -539,7 +539,7 @@ class OZW extends eqLogic
             $cmd->setLogicalId('R_' . $item_id);   // le logical id est égal à 'R_' plus l'id du datapoint
             $cmd->setConfiguration('infoId', $item_id);
             $cmd->setIsVisible(1);
-            $cmd->setOrder($item_id . '2');
+            $cmd->setOrder(time());
             $cmd->setConfiguration('internal_type', $type);
             $cmd->setType('action');
             $cmd->setSubType('other');
