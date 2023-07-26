@@ -20,8 +20,8 @@
 	"maxDependancyInstallTime" : 0,
 	"changelog" : "https://bernard-dandrea.github.io/jeedom-OZW/#language#/changelog",
 	"documentation" : "https://bernard-dandrea.github.io/jeedom-OZW/#language#/",
-	"changelog_beta" : "https://bernard-dandrea.github.io/jeedom-OZW/#language#/beta/changelog",
-	"documentation_beta" : "https://bernard-dandrea.github.io/jeedom-OZW/#language#/beta/",
+	"changelog_beta" : "https://bernard-dandrea.github.io/jeedom-OZW/#language#/changelog_beta",
+	"documentation_beta" : "https://bernard-dandrea.github.io/jeedom-OZW/#language#/index_beta",
 	"link" : {
 	},
 	"language": [
