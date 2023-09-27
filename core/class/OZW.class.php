@@ -184,11 +184,10 @@ class OZW extends eqLogic
         if (isset($obj['Devices'])) {
             foreach ($obj['Devices'] as $item) {
                 if (!is_object(self::byLogicalId($item['SerialNr'], 'OZW'))) {
-                    log::add('OZW', 'info', 'Creation appareil : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')');
-
+                    log::add('OZW', 'info', 'Creation appareil : ' . $item['Type'] . ' (' .  $item['SerialNr']  . ')');
                     $eqLogic = (new OZW())
                         ->setLogicalId($item['SerialNr'])
-                        ->setName($item['Name'])
+                        ->setName(trim($item['Type'] . ' ' . $item['SerialNr']))   // BD 20230927
                         ->setEqType_name('OZW')
                         ->setConfiguration('type', 'appareil')
                         ->setConfiguration('address', $item['Addr'])
@@ -321,9 +320,11 @@ class OZW extends eqLogic
                     $cmd->setType('info');
                     $cmd->setSubType('string');
                     $cmd->setDisplay('generic_type', 'GENERIC_INFO');
+                    /*   PAS UTILE BD 20230927
                     foreach ($obj_detail['Description']['Enums'] as $item_enum) {
                         $cmd->setConfiguration('internal_label_' . $item_enum['Value'], $item_enum['Text']);
                     }
+                    */
                     $cmd->save();
                     break;
                 case "Numeric":
