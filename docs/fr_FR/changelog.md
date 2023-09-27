@@ -6,7 +6,7 @@
 
 # 27/09/2023
 
-- Lors de la création du device, le nom est égal au type suvi du numéro de série (précédemment, le name était repris mais il pouvait être vide)
+- Lors de la création du device, le nom est égal au type suivi du numéro de série (précédemment, le name était repris mais il pouvait être vide)
 
 # 29/05/2023
 
