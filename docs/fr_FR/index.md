@@ -142,13 +142,4 @@ Pour chaque commande relative à un datapoint, on trouve en plus des champs habi
 
 Voici un exemple de widget. On peut modifier le nom des commandes pour refléter le numéro de ligne indiqué dans le serveur WEB. 
 
-# FAQ
-
->**Pourquoi ai-je des messages 'l OZW ne répond pas' ?**
->
->Cela résulte d'un problème de communication avec le serveur.
-
->Il arrive que le serveur WEB ne réagisse plus que ce soit via l'interface WEB ou les APIs. Après un certain temps (de quelques  minutes à quelques heures), la connexion s'établit de nouveau. Dans le pire des cas, il faut redémarrer l'OZW.
-
->L'origine du problème est inconnue: il s'agit peut-être d'un bug du serveur de communication.
 
