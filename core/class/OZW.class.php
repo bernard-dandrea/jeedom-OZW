@@ -103,7 +103,7 @@ class OZW extends eqLogic
     public function RetrieveSessionId()
     {
 
-//        log::add('OZW', 'debug', 'Retrieve SessionId for ID ' . $this->getID() . ' name ' . $this->getName());
+        //        log::add('OZW', 'debug', 'Retrieve SessionId for ID ' . $this->getID() . ' name ' . $this->getName());
         $SessionIdcmd = cmd::byEqLogicIdAndLogicalId($this->getID(), 'SessionID');
 
         if (!is_object($SessionIdcmd)) {
@@ -117,11 +117,11 @@ class OZW extends eqLogic
             $collectDate = $SessionIdcmd->getCollectDate();
 
             $anciennete = floor(strtotime($now) - strtotime($collectDate));
-  //          log::add('OZW', 'debug', 'Sessionid: collect date ' . $SessionIdcmd->getCollectDate() . ' now ' . $now . ' ancienneté ' . $anciennete . ' session_life_time ' . $session_life_time);
+            //          log::add('OZW', 'debug', 'Sessionid: collect date ' . $SessionIdcmd->getCollectDate() . ' now ' . $now . ' ancienneté ' . $anciennete . ' session_life_time ' . $session_life_time);
 
             if (floor(strtotime($now) - strtotime($collectDate)) >= (3600 * $session_life_time)) {
                 $anciennete = strtotime($now) - strtotime($collectDate);
-  //              log::add('OZW', 'info', 'Sessionid expired: collect date ' . $SessionIdcmd->getCollectDate() . ' now ' . $now . ' ancienneté ' . $anciennete . ' session_life_time ' . $session_life_time);
+                //              log::add('OZW', 'info', 'Sessionid expired: collect date ' . $SessionIdcmd->getCollectDate() . ' now ' . $now . ' ancienneté ' . $anciennete . ' session_life_time ' . $session_life_time);
                 return $this->getNewSessionId();
             } else {
                 return $SessionIdcmd->execCmd();
@@ -131,7 +131,7 @@ class OZW extends eqLogic
 
     public function getNewSessionId()
     {
-    //    log::add('OZW', 'debug', 'get SessionId for ID ' . $this->getID() . ' name ' . $this->getName());
+        //    log::add('OZW', 'debug', 'get SessionId for ID ' . $this->getID() . ' name ' . $this->getName());
         $statuscmd = $this->getCmd(null, 'status');
         $SessionIdcmd = cmd::byEqLogicIdAndLogicalId($this->getID(), 'SessionID');
 
@@ -290,11 +290,11 @@ class OZW extends eqLogic
             // si oui, ajoute à la fin un numéro afin d'avoir un nom unique
             if (is_object(cmd::byEqLogicIdCmdName($this->id, $name))) {
                 $count = 1;
-                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 40) . "..." . $count))) {
+                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 100) . "..." . $count))) {
                     $count++;
                 }
-                $cmd->setName(substr($name, 0, 40) . "..." . $count);
-                log::add('OZW', 'info', 'Rename as ' . substr($name, 0, 40) . "..." . $count);
+                $cmd->setName(substr($name, 0, 100) . "..." . $count);
+                log::add('OZW', 'info', 'Rename as ' . $cmd->getName());
             } else {
                 $cmd->setName($name);
             }
@@ -327,6 +327,7 @@ class OZW extends eqLogic
                     */
                     $cmd->save();
                     break;
+                    // Numeric et TimeofDay traités de la même façon
                 case "Numeric":
                 case "TimeOfDay":
                     $cmd->setType('info');
@@ -342,6 +343,8 @@ class OZW extends eqLogic
                     }
                     $cmd->setUnite($obj_detail['Description']['Unit']);
                     $cmd->setDisplay('generic_type', 'GENERIC_INFO');
+                    $cmd->setTemplate('dashboard', 'core::line');
+                    $cmd->setTemplate('mobile', 'core::line');
                     $cmd->save();
                     break;
                 case "Scheduler":
@@ -410,7 +413,7 @@ class OZW extends eqLogic
         $type = $obj_detail['Description']['Type'];
         if (isset($obj_detail['Result']['Success']) && $obj_detail['Result']['Success'] !== "false") {
 
-            $name = substr(str_replace(array('&', '#', ']', '[', '%', "'"), ' ', $obj_detail['Description']['Name']), 0, 38);
+            $name = substr(str_replace(array('&', '#', ']', '[', '%', "'"), ' ', $obj_detail['Description']['Name']), 0, 98);
             if ($name == '') {
                 $name = $item_id;
             }
@@ -426,11 +429,11 @@ class OZW extends eqLogic
             // si oui, ajoute à la fin un numéro afin d'avoir un nom unique
             if (is_object(cmd::byEqLogicIdCmdName($this->id, $name))) {
                 $count = 1;
-                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 40) . "..." . $count))) {
+                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 100) . "..." . $count))) {
                     $count++;
                 }
-                $cmd->setName(substr($name, 0, 40) . "..." . $count);
-                log::add('OZW', 'info', 'Rename as ' . substr($name, 0, 40) . "..." . $count);
+                $cmd->setName(substr($name, 0, 100) . "..." . $count);
+                log::add('OZW', 'info', 'Rename as ' . $cmd->getName());
             } else {
                 $cmd->setName($name);
             }
@@ -528,11 +531,11 @@ class OZW extends eqLogic
             // si oui, ajoute à la fin un numéro afin d'avoir un nom unique
             if (is_object(cmd::byEqLogicIdCmdName($this->id, $name))) {
                 $count = 1;
-                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 40) . "..." . $count))) {
+                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 100) . "..." . $count))) {
                     $count++;
                 }
-                $cmd->setName(substr($name, 0, 40) . "..." . $count);
-                log::add('OZW', 'info', 'Rename as ' . substr($name, 0, 40) . "..." . $count);
+                $cmd->setName(substr($name, 0, 100) . "..." . $count);
+                log::add('OZW', 'info', 'Rename as ' . $cmd->getName());
             } else {
                 $cmd->setName($name);
             }
@@ -596,6 +599,7 @@ class OZW extends eqLogic
 
         if ($this->getConfiguration('type', '') == 'OZW') {
 
+            unset($cmd);
             $cmd = $this->getCmd(null, 'status');
             if (!is_object($cmd)) {
                 $cmd = new OZWCmd();
@@ -609,6 +613,7 @@ class OZW extends eqLogic
                 $cmd->save();
             }
 
+            unset($cmd);
             $cmd = $this->getCmd(null, 'SessionId');
             if (!is_object($cmd)) {
                 $cmd = new OZWCmd();
@@ -621,8 +626,10 @@ class OZW extends eqLogic
                 $cmd->setDisplay('generic_type', 'GENERIC_INFO');
                 $cmd->save();
             }
+
         } else {
 
+            unset($cmd);
             $cmd = $this->getCmd(null, 'updatetime');
             if (!is_object($cmd)) {
                 $cmd = new OZWCmd();
@@ -633,6 +640,20 @@ class OZW extends eqLogic
                 $cmd->setType('info');
                 $cmd->setSubType('string');
                 $cmd->setIsHistorized(0);
+                $cmd->save();
+            }
+            
+            unset($cmd);
+            $cmd = $this->getCmd(null, 'Refresh');
+            if (!is_object($cmd)) {
+                $cmd = new OZWCmd();
+                $cmd->setName('Refresh');
+                $cmd->setEqLogic_id($this->getId());
+                $cmd->setType('action');
+                $cmd->setSubType('other');
+                $cmd->setLogicalId('refresh');
+                $cmd->setIsVisible(1);
+                $cmd->setDisplay('generic_type', 'GENERIC_INFO');
                 $cmd->save();
             }
         }
@@ -687,22 +708,36 @@ class OZW extends eqLogic
     {
         foreach (eqLogic::byTypeAndSearchConfiguration('OZW', '"type":"appareil"') as $eqLogic) {
             if ($eqLogic->getIsEnable()) {
-
-                log::add('OZW', 'info', 'cron Refresh Info Appareil : ' . $eqLogic->name);
-
-                $carte = $eqLogic->getParent();
-
-                foreach ($eqLogic->getCmd() as $cmd) {
-                    if (is_numeric($cmd->getLogicalId()) && $cmd->getConfiguration('isCollected') == 1 && $cmd->getConfiguration('cron') == $_cron) {
-                        if ($eqLogic->refresh_info_cmd($carte, $cmd) == true) {
-                            $eqLogic_refresh_cmd = $eqLogic->getCmd(null, 'updatetime');
-                            $eqLogic_refresh_cmd->event(date("d/m/Y H:i", (time())));
-                        }
-                    }
-                }
+                OZW::OZW_Update($eqLogic, $_cron);
             }
         }
     }
+
+    public function OZW_Update($_eqLogic, $_cron)
+    {
+
+        log::add('OZW', 'info', 'OZW_Update Appareil : ' . $_eqLogic->getName() . ' cron ' . $_cron);
+        if ($_eqLogic->getIsEnable()) {
+
+            log::add('OZW', 'info', 'cron Refresh Info Appareil : ' . $_eqLogic->getName());
+
+            $carte = $_eqLogic->getParent();
+        
+            foreach ($_eqLogic->getCmd() as $cmd) {
+             if (is_numeric($cmd->getLogicalId()) && $cmd->getConfiguration('isCollected') == 1 && ($cmd->getConfiguration('cron') == $_cron || $_cron == 'refresh')) {
+           
+                if ($_eqLogic->refresh_info_cmd($carte, $cmd) == true) {
+                        $eqLogic_refresh_cmd = $_eqLogic->getCmd(null, 'updatetime');
+                        $eqLogic_refresh_cmd->event(date("d/m/Y H:i", (time())));
+                    }   
+                }
+            }
+                   
+        }
+
+    }
+
+
     function refresh_info_cmd($_carte, $_cmd)
     {
         log::add('OZW', 'debug', 'Read datapoint ' . $_cmd->getLogicalId() . ' ' . $_cmd->getName());
@@ -728,6 +763,13 @@ class OZWCmd extends cmd
         }
         $carte = $eqLogic->getParent();
         //       $carte->getSessionId();
+
+        // Refresh toutes les infos
+        if ($this->getLogicalId() == 'refresh') {
+            log::add('OZW', 'info', __('execute ', __FILE__) . '  refresh');
+            OZW::OZW_Update($eqLogic, 'refresh');
+            return true;
+        }
 
         // Commande action
         if (substr($this->getLogicalId(), 0, 2) == 'A_') {
@@ -783,7 +825,7 @@ class OZWCmd extends cmd
         if (is_object($eqLogic)) {
 
             if ($eqLogic->getConfiguration('type', '') == 'OZW') {
-                if ($this->getLogicalId() == 'status' || $this->getLogicalId() == 'SessionId') {
+                if ($this->getLogicalId() == 'status' || $this->getLogicalId() == 'SessionId' || $this->getLogicalId() == 'refresh') {
                     return true;
                 }
             } else {
