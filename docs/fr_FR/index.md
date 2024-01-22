@@ -100,9 +100,10 @@ Pour l'OZW, 2 commandes de type info sont créées :
 
 ![OZW_Commandes_device_initial](../images/OZW_Commandes_device_initial.png)
 
-Pour les devices attachés à l'OZW, une commande de type info est créée :
+Pour les devices attachés à l'OZW, deux commandes de type info sont créées :
 
 - Dernier Refresh : indique quand la dernière information du device a été mise à jour
+- Refresh: commande action permettant de mettre à jour tous les datapoints pour lesquels l'update est activé
 
 ![OZW_Importer_Menu_principal](../images/OZW_Importer_Menu_principal.png)
 
