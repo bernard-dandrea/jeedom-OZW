@@ -4,9 +4,15 @@
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 22/01/2024
+
+- Ajout d'une commande Refresh
+- Longueur maxi des noms de champs portée à 100
+- Pour les champs info de type Numeric, le widget est Line (et non Defaut)
+
 # 13/12/2023
 
-- Mise à jopur documentation (suppression FAQ)
+- Mise à jour documentation (suppression FAQ)
 
 # 27/09/2023
 
