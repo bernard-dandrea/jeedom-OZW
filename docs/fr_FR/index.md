@@ -143,4 +143,8 @@ Pour chaque commande relative à un datapoint, on trouve en plus des champs habi
 
 Voici un exemple de widget. On peut modifier le nom des commandes pour refléter le numéro de ligne indiqué dans le serveur WEB. 
 
+# Avis
 
+![OZW_avis](../images/OZW_avis.png)
+
+Si vous appréciez ce plugin, merci de laisser une évaluation et un commentaire sur le Jeedom market, ça fait toujours plaisir: <https://jeedom.com/market/index.php?v=d&p=market_display&id=4414#>
