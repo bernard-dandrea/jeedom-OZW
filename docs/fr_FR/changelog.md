@@ -4,6 +4,10 @@
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
 
+# 25/02/2024
+
+- Mise à jour documentation
+
 # 22/01/2024
 
 - Ajout d'une commande Refresh
