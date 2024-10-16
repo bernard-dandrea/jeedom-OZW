@@ -205,7 +205,7 @@ $('#bt_main_commands_import').on('click', function () {
 
 
 $('#bt_MenuImport').on('click', function () {
-    bootbox.prompt('{{ID du menu}}' + ' ?', function (result) {
+    bootbox.prompt('{{Référence WEB du menu}}' + ' ?', function (result) {
 
         if (result !== null && result != '') {
 
@@ -238,7 +238,7 @@ $('#bt_MenuImport').on('click', function () {
 
 $('#bt_create_info_command').on('click', function () {
 
-    bootbox.prompt('{{ID de la commande1}}' + ' ?', function (result) {
+    bootbox.prompt('{{Référence WEB du datapoint}}' + ' ?', function (result) {
 
         if (result !== null && result != '') {
 
@@ -272,7 +272,7 @@ $('#bt_create_info_command').on('click', function () {
 
 $('#bt_create_action_command').on('click', function () {
 
-    bootbox.prompt('{{ID de la commande1}}' + ' ?', function (result) {
+    bootbox.prompt('{{Référence WEB du datapoint}}' + ' ?', function (result) {
 
         if (result !== null && result != '') {
 
@@ -307,7 +307,7 @@ $('#bt_create_action_command').on('click', function () {
 
 $('#bt_create_refresh_command').on('click', function () {
 
-    bootbox.prompt('{{ID de la commande1}}' + ' ?', function (result) {
+    bootbox.prompt('{{Référence WEB du datapoint}}' + ' ?', function (result) {
 
         if (result !== null && result != '') {
 
