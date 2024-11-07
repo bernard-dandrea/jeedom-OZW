@@ -661,61 +661,61 @@ class OZW extends eqLogic
 
 
 
-    public function cron()
+    public static function cron()
     {
         log::add('OZW', 'info', 'Lancement de cron');
         OZW::cron_update(__FUNCTION__);
     }
-    public function cron5()
+    public static function cron5()
     {
         sleep(5);
         log::add('OZW', 'info', 'Lancement de cron5');
         OZW::cron_update(__FUNCTION__);
     }
-    public function cron10()
+    public static function cron10()
     {
         sleep(10);
         log::add('OZW', 'info', 'Lancement de cron10');
         OZW::cron_update(__FUNCTION__);
     }
-    public function cron15()
+    public static function cron15()
     {
         sleep(15);
         log::add('OZW', 'info', 'Lancement de cron15');
         OZW::cron_update(__FUNCTION__);
     }
-    public function cron30()
+    public static function cron30()
     {
         sleep(20);
         log::add('OZW', 'info', 'Lancement de cron30');
         OZW::cron_update(__FUNCTION__);
     }
 
-    public function cronHourly()
+    public static function cronHourly()
     {
         sleep(25);
         log::add('OZW', 'info', 'Lancement de cronHourly');
         OZW::cron_update(__FUNCTION__);
     }
 
-    public function cronDaily()
+    public static function cronDaily()
     {
         sleep(30);
         log::add('OZW', 'info', 'Lancement de cronDaily');
         OZW::cron_update(__FUNCTION__);
     }
-    public function cron_update($_cron)
+    public static function cron_update($_cron)
     {
         foreach (eqLogic::byTypeAndSearchConfiguration('OZW', '"type":"appareil"') as $eqLogic) {
             if ($eqLogic->getIsEnable()) {
-                OZW::OZW_Update($eqLogic, $_cron);
+                $eqLogic->OZW_Update($_cron);
             }
         }
     }
 
-    public function OZW_Update($_eqLogic, $_cron)
+    public function OZW_Update($_cron)
     {
-
+        $_eqLogic = $this;
         log::add('OZW', 'info', 'OZW_Update Appareil : ' . $_eqLogic->getName() . ' cron ' . $_cron);
         if ($_eqLogic->getIsEnable()) {
 
@@ -767,7 +767,7 @@ class OZWCmd extends cmd
         // Refresh toutes les infos
         if ($this->getLogicalId() == 'refresh') {
             log::add('OZW', 'info', __('execute ', __FILE__) . '  refresh');
-            OZW::OZW_Update($eqLogic, 'refresh');
+            $eqLogic->OZW_Update($eqLogic, 'refresh');
             return true;
         }
 
