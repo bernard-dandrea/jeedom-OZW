@@ -728,7 +728,7 @@ class OZW extends eqLogic
            
                 if ($_eqLogic->refresh_info_cmd($carte, $cmd) == true) {
                         $eqLogic_refresh_cmd = $_eqLogic->getCmd(null, 'updatetime');
-                        $eqLogic_refresh_cmd->event(date("d/m/Y H:i", (time())));
+                        $_eqLogic->checkAndUpdateCmd($eqLogic_refresh_cmd, date("d/m/Y H:i", (time())));
                     }   
                 }
             }
@@ -744,7 +744,8 @@ class OZW extends eqLogic
         $obj = OZW::OZW_api($_carte, 'menutree/read_datapoint.json?&SessionId=%id%&Id=' . $_cmd->getLogicalId());
         if (isset($obj['Result']['Success']) && $obj['Result']['Success'] !== "false") {
             log::add('OZW', 'info', 'Read de ' . $_cmd->getLogicalId() . ' ' . $_cmd->getName() . ' --> ' . $obj['Data']['Value']);
-            $_cmd->event($obj['Data']['Value']);
+            $eqLogic = $_cmd->getEqlogic();
+            $eqLogic->checkAndUpdateCmd($_cmd, $obj['Data']['Value']);
             return true;
         } else {
             return false;
