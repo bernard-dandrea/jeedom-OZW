@@ -3,6 +3,9 @@
 >**IMPORTANT**
 >
 >S'il n'y a pas d'information sur la mise à jour, c'est que celle-ci concerne uniquement de la mise à jour de documentation, de traduction ou de texte.
+# BETA
+
+- Remplacement event par checkAndUpdateCmd pour eviter répétition des valeurs dans history
 
 # 07/11/2024
 
