@@ -1,5 +1,7 @@
 <?php
 
+// Last Modified : 2026/07/04 08:58:03
+
 /* This file is part of Jeedom.
  *
  * Jeedom is free software: you can redistribute it and/or modify
@@ -21,10 +23,17 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
 class OZW extends eqLogic
 {
-    /*     * *************************Attributs****************************** */
+    public function encrypt()
+    {
+        $this->setConfiguration('username', utils::encrypt($this->getConfiguration('username')));
+        $this->setConfiguration('password', utils::encrypt($this->getConfiguration('password')));
+    }
 
-
-    /*     * ***********************Methode static*************************** */
+    public function decrypt()
+    {
+        $this->setConfiguration('username', utils::decrypt($this->getConfiguration('username')));
+        $this->setConfiguration('password', utils::decrypt($this->getConfiguration('password')));
+    }
 
     public function getParent()
     {
@@ -102,7 +111,6 @@ class OZW extends eqLogic
 
     public function RetrieveSessionId()
     {
-
         //        log::add('OZW', 'debug', 'Retrieve SessionId for ID ' . $this->getID() . ' name ' . $this->getName());
         $SessionIdcmd = cmd::byEqLogicIdAndLogicalId($this->getID(), 'SessionID');
 
@@ -320,14 +328,10 @@ class OZW extends eqLogic
                     $cmd->setType('info');
                     $cmd->setSubType('string');
                     $cmd->setDisplay('generic_type', 'GENERIC_INFO');
-                    /*   PAS UTILE BD 20230927
-                    foreach ($obj_detail['Description']['Enums'] as $item_enum) {
-                        $cmd->setConfiguration('internal_label_' . $item_enum['Value'], $item_enum['Text']);
-                    }
-                    */
+
                     $cmd->save();
                     break;
-                    // Numeric et TimeofDay traités de la même façon
+                // Numeric et TimeofDay traités de la même façon
                 case "Numeric":
                 case "TimeOfDay":
                     $cmd->setType('info');
@@ -560,19 +564,6 @@ class OZW extends eqLogic
         }
     }
 
-    public function preUpdate()
-    {
-        if ($this->getIsEnable()) {
-            //    return $this->getSessionId();
-        }
-    }
-
-    public function preSave()
-    {
-        if ($this->getIsEnable()) {
-            //    return $this->getSessionId();
-        }
-    }
 
     public function preRemove()
     {
@@ -626,7 +617,6 @@ class OZW extends eqLogic
                 $cmd->setDisplay('generic_type', 'GENERIC_INFO');
                 $cmd->save();
             }
-
         } else {
 
             unset($cmd);
@@ -642,7 +632,7 @@ class OZW extends eqLogic
                 $cmd->setIsHistorized(0);
                 $cmd->save();
             }
-            
+
             unset($cmd);
             $cmd = $this->getCmd(null, 'Refresh');
             if (!is_object($cmd)) {
@@ -659,82 +649,70 @@ class OZW extends eqLogic
         }
     }
 
-
-
     public static function cron()
     {
         log::add('OZW', 'info', 'Lancement de cron');
-        OZW::cron_update(__FUNCTION__);
-    }
-    public static function cron5()
-    {
-        sleep(5);
-        log::add('OZW', 'info', 'Lancement de cron5');
-        OZW::cron_update(__FUNCTION__);
-    }
-    public static function cron10()
-    {
-        sleep(10);
-        log::add('OZW', 'info', 'Lancement de cron10');
-        OZW::cron_update(__FUNCTION__);
-    }
-    public static function cron15()
-    {
-        sleep(15);
-        log::add('OZW', 'info', 'Lancement de cron15');
-        OZW::cron_update(__FUNCTION__);
-    }
-    public static function cron30()
-    {
-        sleep(20);
-        log::add('OZW', 'info', 'Lancement de cron30');
-        OZW::cron_update(__FUNCTION__);
-    }
-
-    public static function cronHourly()
-    {
-        sleep(25);
-        log::add('OZW', 'info', 'Lancement de cronHourly');
-        OZW::cron_update(__FUNCTION__);
-    }
-
-    public static function cronDaily()
-    {
-        sleep(30);
-        log::add('OZW', 'info', 'Lancement de cronDaily');
-        OZW::cron_update(__FUNCTION__);
-    }
-    public static function cron_update($_cron)
-    {
         foreach (eqLogic::byTypeAndSearchConfiguration('OZW', '"type":"appareil"') as $eqLogic) {
+            log::add('OZW', 'info', 'Appel OZW_Update OZW : ' . $eqLogic->getName());
             if ($eqLogic->getIsEnable()) {
-                $eqLogic->OZW_Update($_cron);
+                OZW::OZW_Update($eqLogic);
             }
         }
     }
 
-    public function OZW_Update($_cron)
+    public static function OZW_Update($_eqLogic, $_context = 'cron')
     {
-        $_eqLogic = $this;
-        log::add('OZW', 'info', 'OZW_Update Appareil : ' . $_eqLogic->getName() . ' cron ' . $_cron);
-        if ($_eqLogic->getIsEnable()) {
+        log::add('OZW', 'info', 'OZW_Update Appareil : ' . $_eqLogic->getName() . ' Contexte ' . $_context);
 
-            log::add('OZW', 'info', 'cron Refresh Info Appareil : ' . $_eqLogic->getName());
 
-            $carte = $_eqLogic->getParent();
-        
-            foreach ($_eqLogic->getCmd() as $cmd) {
-             if (is_numeric($cmd->getLogicalId()) && $cmd->getConfiguration('isCollected') == 1 && ($cmd->getConfiguration('cron') == $_cron || $_cron == 'refresh')) {
-           
-                if ($_eqLogic->refresh_info_cmd($carte, $cmd) == true) {
+        $carte = $_eqLogic->getParent();
+
+        foreach ($_eqLogic->getCmd() as $cmd) {
+            if (is_numeric($cmd->getLogicalId()) && $cmd->getConfiguration('isCollected') == 1) {
+                $run = false;
+                if ($_context == 'refresh') {
+                    $run = true;
+                } else {
+                    $autorefresh = '';
+                    switch ($cmd->getConfiguration('cron')) {
+                        case "cron":
+                            $autorefresh = '*/1 * * * *';
+                            break;
+                        case "cron5":
+                            $autorefresh = '*/5 * * * *';
+                            break;
+                        case "cron10":
+                            $autorefresh = '*/10 * * * *';
+                            break;
+                        case "cron15":
+                            $autorefresh = '*/15 * * * *';
+                            break;
+                        case "cron30":
+                            $autorefresh = '*/30 * * * *';
+                            break;
+                        case "cronHourly":
+                            $autorefresh = '0 * * * *';
+                            break;
+                        case "cronDaily":
+                            $autorefresh = '0 0 * * *';
+                            break;
+                    }
+                    if ($autorefresh != '') {
+                        $c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+                        if ($c->isDue()) {
+                            $run = true;
+                        }
+                    }
+                }
+
+                if ($run == true) {
+                    if ($_eqLogic->refresh_info_cmd($carte, $cmd) == true) {
                         $eqLogic_refresh_cmd = $_eqLogic->getCmd(null, 'updatetime');
                         $_eqLogic->checkAndUpdateCmd($eqLogic_refresh_cmd, date("d/m/Y H:i", (time())));
-                    }   
+                    }
                 }
             }
-                   
         }
-
     }
 
 
@@ -768,7 +746,7 @@ class OZWCmd extends cmd
         // Refresh toutes les infos
         if ($this->getLogicalId() == 'refresh') {
             log::add('OZW', 'info', __('execute ', __FILE__) . '  refresh');
-            $eqLogic->OZW_Update($eqLogic, 'refresh');
+            OZW::OZW_Update($eqLogic, 'refresh');
             return true;
         }
 
