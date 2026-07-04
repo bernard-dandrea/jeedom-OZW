@@ -1,6 +1,7 @@
 <?php
 
-// Last Modified : 2026/07/04 08:58:03
+
+// Last Modified : 2026/07/04 09:14:42
 
 /* This file is part of Jeedom.
  *
@@ -653,7 +654,6 @@ class OZW extends eqLogic
     {
         log::add('OZW', 'info', 'Lancement de cron');
         foreach (eqLogic::byTypeAndSearchConfiguration('OZW', '"type":"appareil"') as $eqLogic) {
-            log::add('OZW', 'info', 'Appel OZW_Update OZW : ' . $eqLogic->getName());
             if ($eqLogic->getIsEnable()) {
                 OZW::OZW_Update($eqLogic);
             }
