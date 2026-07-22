@@ -1,7 +1,7 @@
 <?php
 
 
-// Last Modified : 2026/07/04 09:14:42
+// Last Modified : 2026/07/22 13:38:35
 
 /* This file is part of Jeedom.
  *
@@ -36,7 +36,32 @@ class OZW extends eqLogic
         $this->setConfiguration('password', utils::decrypt($this->getConfiguration('password')));
     }
 
-    public function getParent()
+    public static function enable_cron($_enable)
+    {
+        $cron_OZW = cron::byClassAndFunction('OZW', 'update');
+        $schedule = '* * * * *';
+        if ($_enable == '1') {
+            log::add('OZW', 'debug', __('Activation du cron de OZW', __FILE__));
+            if (!is_object($cron_OZW)) {
+                $cron_OZW = new cron();
+                $cron_OZW->setClass('OZW');
+                $cron_OZW->setFunction('update');
+                $cron_OZW->setEnable(1);
+                $cron_OZW->setDeamon(0);
+                $cron_OZW->setSchedule($schedule);
+                $cron_OZW->setTimeout(1);
+            } else {
+                $cron_OZW->setEnable(1);
+            }
+            $cron_OZW->save();
+        } else {
+            log::add('OZW', 'debug', __('Désactivation du cron de OZW', __FILE__));
+            if (is_object($cron_OZW)) {
+                $cron_OZW->remove();
+            }
+        }
+    }
+   public function getParent()
     {
         if ($this->getConfiguration('type', '') == 'OZW') {
             $carte = $this;
@@ -650,9 +675,19 @@ class OZW extends eqLogic
         }
     }
 
+
     public static function cron()
     {
-        log::add('OZW', 'info', 'Lancement de cron');
+        $cron_OZW = cron::byClassAndFunction('OZW', 'update');
+        if (!is_object($cron_OZW)) {
+            log::add('OZW', 'info', 'Lancement de cron');
+            OZW::update();
+        }
+    }
+
+    public static function update()
+    {
+        log::add('OZW', 'info', 'Lancement de update');
         foreach (eqLogic::byTypeAndSearchConfiguration('OZW', '"type":"appareil"') as $eqLogic) {
             if ($eqLogic->getIsEnable()) {
                 OZW::OZW_Update($eqLogic);
