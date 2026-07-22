@@ -1,4 +1,8 @@
 <?php
+
+
+// Last Modified : 2026/07/22 13:31:54
+
 /* This file is part of Jeedom.
 *
 * Jeedom is free software: you can redistribute it and/or modify
@@ -45,4 +49,8 @@ function OZW_pre_update()
 
 function OZW_remove()
 {
+    $cron = cron::byClassAndFunction('OZW', 'update');
+    if (is_object($cron)) {
+        $cron->remove();
+    }
 }
