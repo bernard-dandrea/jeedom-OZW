@@ -1,4 +1,8 @@
 <?php
+
+
+// Last Modified : 2026/07/22 13:35:30
+
 /* This file is part of Jeedom.
  *
  * Jeedom is free software: you can redistribute it and/or modify
@@ -75,6 +79,11 @@ try {
         $_refresh = init('_refresh');
         $OZW = $eqLogic->create_command($id_commande, $_info,$_action,$_refresh);
         ajax::success($OZW);
+    }
+
+    if (init('action') == 'enable_cron') {
+        OZW::enable_cron(init('enable'));
+        ajax::success();
     }
 
     throw new Exception(__('Aucune méthode correspondante à', __FILE__) . ' : ' . init('action'));
