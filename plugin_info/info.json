@@ -1,19 +1,12 @@
 {
 	"id" : "OZW",
 	"name" : "OZW",
-	"specialAttributes" : {
-		"object" : {
-
-		},
-		"user" : {
-		}
-	},
 	"description" : {
 		"fr_FR": "Plugin permettant de s'interfacer avec les controleurs SIEMENS de type OZW"
 	},
 	"licence" : "AGPL",
 	"author" : "Bernard Dandrea",
-	"require" : "4.2.0",
+	"require" : "4.4.0",
 	"category" : "devicecommunication",
 	"hasDependency" : false,
 	"hasOwnDeamon" : false,
@@ -21,7 +14,7 @@
 	"changelog" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/changelog",
 	"documentation" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/index",
 	"changelog_beta" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/changelog_beta",
-	"documentation_beta" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/index_beta",
+	"documentation_beta" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/index",
 	"link" : {
 	},
 	"language": [
