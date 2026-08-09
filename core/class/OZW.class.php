@@ -1,7 +1,7 @@
 <?php
 
 
-// Last Modified : 2026/07/22 13:38:35
+// Last Modified : 2026/08/09 16:55:21
 
 /* This file is part of Jeedom.
  *
@@ -61,7 +61,7 @@ class OZW extends eqLogic
             }
         }
     }
-   public function getParent()
+    public function getParent()
     {
         if ($this->getConfiguration('type', '') == 'OZW') {
             $carte = $this;
@@ -87,22 +87,20 @@ class OZW extends eqLogic
         return file_get_contents($url, false, $ctx);
     }
 
-
-
     function OZW_api($_carte, $_api, $_retry_SessionId = true)
     {
-        log::add('OZW', 'debug', 'Execute API ' . $_carte->getName() . ' url=' . $_api);
+        log::add('OZW', 'debug', __FUNCTION__ . ' ' . __('Execute API sur', __FILE__) . ' ' . $_carte->getName() . ' url=' . $_api);
 
         $SessionId = $_carte->RetrieveSessionId();
         if ($SessionId == '') {
-            throw new \Exception(__('Impossible d obtenir un SessionID', __FILE__));
+            throw new \Exception(__('Impossible d\'obtenir un SessionID', __FILE__));
         }
 
         $statuscmd = $this->getCmd(null, 'status');
 
         $url_api = 'https://' . $_carte->getConfiguration('ip') . '/api/' . str_replace('%id%', $SessionId, $_api);
         $json = $this->https_file_get_contents($url_api);
-        log::add('OZW', 'debug', 'Request ' . $url_api);
+        log::add('OZW', 'debug', __FUNCTION__ . ' ' . __('Requete', __FILE__) . ' ' . $url_api);
         if ($json === false) {
             if (is_object($statuscmd)) {
                 $statuscmd->setCollectDate('');
@@ -111,17 +109,17 @@ class OZW extends eqLogic
             throw new \Exception(__('L\'OZW ne repond pas.', __FILE__));
         }
         $obj = json_decode($json, TRUE);
-        log::add('OZW', 'debug', 'Detail data : ' . print_r($obj, true));
+        log::add('OZW', 'debug', __FUNCTION__ . ' ' . 'data : ' . print_r($obj, true));
         if ((isset($obj['Result']['Success']) && $obj['Result']['Success'] !== "false") == false) {
             if (isset($obj['Result']['Error']['Txt'])) {
                 // si le session ID est expiré, en récupére un nouveau et retente le call API une seule fois
                 if (($obj['Result']['Error']['Txt'] == 'session not valid') && $_retry_SessionId = true) {
-                    log::add('OZW', 'debug', __('Session not valid', __FILE__));
+                    log::add('OZW', 'debug', __FUNCTION__ . ' ' . __('Session non valide', __FILE__));
                     $_carte->getNewSessionId();
                     $this->OZW_api($_carte, $_api, false);
                 } else {
-                    log::add('OZW', 'error', __('L\'OZW error : ', __FILE__) . $obj['Result']['Error']['Txt']);
-                    throw new \Exception(__('L\'OZW error : ', __FILE__) . $obj['Result']['Error']['Txt']);
+                    log::add('OZW', 'error', __FUNCTION__ . ' ' . __('OZW erreur', __FILE__) . ' : ' . $obj['Result']['Error']['Txt']);
+                    throw new \Exception(__('OZW erreur', __FILE__) . ' : ' . $obj['Result']['Error']['Txt']);
                 }
             } else {
                 if (is_object($statuscmd)) {
@@ -141,7 +139,7 @@ class OZW extends eqLogic
         $SessionIdcmd = cmd::byEqLogicIdAndLogicalId($this->getID(), 'SessionID');
 
         if (!is_object($SessionIdcmd)) {
-            throw new \Exception('Pas de commande SessionId pour l EqLogicId ' . $this->id . ' name ' . $this->getName());
+            throw new \Exception(__('Pas de commande SessionId pour l\'eqLogicId', __FILE__) . ' ' . $this->id . ' ' . $this->getName());
         } else {
             $session_life_time = $this->getConfiguration('session_life_time');
             if (!is_numeric($session_life_time)) {
@@ -151,11 +149,9 @@ class OZW extends eqLogic
             $collectDate = $SessionIdcmd->getCollectDate();
 
             $anciennete = floor(strtotime($now) - strtotime($collectDate));
-            //          log::add('OZW', 'debug', 'Sessionid: collect date ' . $SessionIdcmd->getCollectDate() . ' now ' . $now . ' ancienneté ' . $anciennete . ' session_life_time ' . $session_life_time);
 
             if (floor(strtotime($now) - strtotime($collectDate)) >= (3600 * $session_life_time)) {
                 $anciennete = strtotime($now) - strtotime($collectDate);
-                //              log::add('OZW', 'info', 'Sessionid expired: collect date ' . $SessionIdcmd->getCollectDate() . ' now ' . $now . ' ancienneté ' . $anciennete . ' session_life_time ' . $session_life_time);
                 return $this->getNewSessionId();
             } else {
                 return $SessionIdcmd->execCmd();
@@ -165,16 +161,16 @@ class OZW extends eqLogic
 
     public function getNewSessionId()
     {
-        //    log::add('OZW', 'debug', 'get SessionId for ID ' . $this->getID() . ' name ' . $this->getName());
+        log::add('OZW', 'debug', __FUNCTION__ . ' ' . __('get SessionId pour ID', __FILE__) . ' ' . $this->getID() . ' '  . $this->getName());
         $statuscmd = $this->getCmd(null, 'status');
         $SessionIdcmd = cmd::byEqLogicIdAndLogicalId($this->getID(), 'SessionID');
 
         if (!is_object($SessionIdcmd)) {
-            throw new \Exception('Pas de commande SessionId pour l EqLogicId ' . $this->id . ' name ' . $this->getName());
+            throw new \Exception(__('Pas de commande SessionId pour l EqLogicId', __FILE__) . ' ' . $this->id . ' ' . $this->getName());
         }
 
         if ($this->getConfiguration('ip', '') == '') {
-            throw new \Exception('Adresse IP non définie pour l EqLogicId ' . $this->id . ' name ' . $this->getName());
+            throw new \Exception(__('Adresse IP non définie pour l EqLogicId', __FILE__) . ' ' . $this->id . ' ' . $this->getName());
         }
 
         $json  = $this->https_file_get_contents('https://' . $this->getConfiguration('ip') . '/api/auth/login.json?user=' . $this->getConfiguration('username') . '&pwd=' . $this->getConfiguration('password'));
@@ -199,7 +195,7 @@ class OZW extends eqLogic
             }
 
             if (isset($obj['Result']['Error']['Txt'])) {
-                throw new \Exception(__('L\'OZW error : ', __FILE__) . $obj['Result']['Error']['Txt']);
+                throw new \Exception(__('OZW erreur', __FILE__) . ' : ' . $obj['Result']['Error']['Txt']);
             } else {
                 throw new \Exception(__('Erreur de communication avec l\'OZW', __FILE__));
             }
@@ -211,14 +207,15 @@ class OZW extends eqLogic
     {
 
         if ($this->getIsEnable() == false) {
-            throw new \Exception(__('Equipement non activé', __FILE__));
+            $return = __('Equipement non activé', __FILE__);
+            return 'KO ' . $return;
         }
 
         $obj = OZW::OZW_api($this, 'devicelist/list.json?SessionId=%id%');
         if (isset($obj['Devices'])) {
             foreach ($obj['Devices'] as $item) {
                 if (!is_object(self::byLogicalId($item['SerialNr'], 'OZW'))) {
-                    log::add('OZW', 'info', 'Creation appareil : ' . $item['Type'] . ' (' .  $item['SerialNr']  . ')');
+                    log::add('OZW', 'info', __('Creation appareil', __FILE__) . ' : ' . $item['Type'] . ' (' .  $item['SerialNr']  . ')');
                     $eqLogic = (new OZW())
                         ->setLogicalId($item['SerialNr'])
                         ->setName(trim($item['Type'] . ' ' . $item['SerialNr']))   // BD 20230927
@@ -230,10 +227,17 @@ class OZW extends eqLogic
                         ->setIsEnable(1)
                         ->setIsVisible(1);
                     $eqLogic->save();
+                    return 'OK ' . __('Devices importés');
                 } else {
-                    log::add('OZW', 'info', 'Appareil déjà créé : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')');
+                    $return = __('Appareil déjà créé', __FILE__) . ' : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')';
+                    log::add('OZW', 'info', $return);
+                    return 'KO ' . $return;
                 }
             }
+        } else {
+            $return = __('Erreur lecture du device', __FILE__) . ' ' . print_r($obj, true);
+            log::add('OZW', 'error',  $return);
+            return 'KO ' . $return;
         }
     }
 
@@ -251,18 +255,21 @@ class OZW extends eqLogic
             if (isset($obj['TreeItem']['Id'])) {
                 $this->MenuImport($obj['TreeItem']['Id']);
             } else {
-                log::add('OZW', 'debug', 'Cannot Find TreeItem : ' . $obj['Result']['Error']['Txt']);
+                log::add('OZW', 'debug', __('Ne trouve pas le', __FILE__) . ' TreeItem : ' . $obj['Result']['Error']['Txt']);
             }
+        } else {
+            $return = __('Erreur lecture des commandes principales', __FILE__) . ' ' . print_r($obj, true);
+            log::add('OZW', 'error',  $return);
+            return 'KO ' . $return;
         }
     }
 
     public function MenuImport($menu_id)
     {
 
-        log::add('OZW', 'debug', __('MenuImport ', __FILE__) . $this->name . ' Menu ' . $menu_id);
+        log::add('OZW', 'debug', __FUNCTION__ . ' ' . $this->name . ' Menu ' . $menu_id);
 
         $carte = $this->getParent();
-        //     $carte->getSessionId();
 
         $obj = OZW::OZW_api($carte, 'menutree/list.json?SessionId=%id%&Id=' . $menu_id);
 
@@ -276,31 +283,37 @@ class OZW extends eqLogic
             foreach ($obj['MenuItems'] as $item) {
                 $this->MenuImport($item['Id']);
             }
+        } else {
+            $return = __('Erreur lecture menu', __FILE__) . ' ' . print_r($obj, true);
+            log::add('OZW', 'error',  $return);
+            return 'KO ' . $return;
         }
     }
 
     public function create_command($id_commande, $info, $action, $refresh)
     {
-        log::add('OZW', 'info', __('create_command', __FILE__) . ' ' . $this->name . ' Commande ' . $id_commande . ' Info ' . $info . ' Action ' . $action . ' Refresh ' . $refresh);
+        log::add('OZW', 'info', __FUNCTION__ . ' ' . $this->name . ' Commande ' . $id_commande . ' Info ' . $info . ' Action ' . $action . ' Refresh ' . $refresh);
         $carte = $this->getParent();
         //    $carte->getSessionId();
         if ($info != '') {
-            $this->create_info_command($carte, $id_commande);
+            $return = $this->create_info_command($carte, $id_commande);
         }
         if ($action != '') {
-            $this->create_action_command($carte, $id_commande);
+            $return = $this->create_action_command($carte, $id_commande);
         }
         if ($refresh != '') {
-            $this->create_refresh_command($carte, $id_commande);
+            $return = $this->create_refresh_command($carte, $id_commande);
         }
+        return $return;
     }
 
     private function create_info_command($carte, $item_id)
-    // crée la commande type info
+
     {
         if (is_object(cmd::byEqLogicIdAndLogicalId($this->id, $item_id))) {
-            log::add('OZW', 'info', __('create_info_command ', __FILE__) . $this->name . '  commande déjà créée ' . $item_id);
-            return '0';
+            $return = __('Commande info déjà créée', __FILE__) . ' ' . $item_id;
+            log::add('OZW', 'info', __FUNCTION__ . ' ' . $return);
+            return 'KO ' . $return;
         }
 
         // lit la description du datapoint
@@ -320,18 +333,7 @@ class OZW extends eqLogic
             $cmd->setName($name);
             $name = $cmd->getName();
 
-            // teste si le nom de la commande est déjà attribué
-            // si oui, ajoute à la fin un numéro afin d'avoir un nom unique
-            if (is_object(cmd::byEqLogicIdCmdName($this->id, $name))) {
-                $count = 1;
-                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 100) . "..." . $count))) {
-                    $count++;
-                }
-                $cmd->setName(substr($name, 0, 100) . "..." . $count);
-                log::add('OZW', 'info', 'Rename as ' . $cmd->getName());
-            } else {
-                $cmd->setName($name);
-            }
+            $cmd->setName(OZW_getUniqueCmdName($this->getId(), $name));
 
             // crée la commande de type INFO
             $cmd->setEqLogic_id($this->getId());
@@ -341,7 +343,6 @@ class OZW extends eqLogic
             $cmd->setOrder(time());
             $cmd->setConfiguration('isCollected', '1');
             $cmd->setConfiguration('internal_type', $type);
-            log::add('OZW', 'debug', 'Type : ' . $type);
 
             switch ($type) {
                 case "DateTime":
@@ -394,7 +395,6 @@ class OZW extends eqLogic
                     $cmd->setSubType('binary');
                     $cmd->setDisplay('generic_type', 'GENERIC_INFO');
                     $cmd->save();
-                    $item['WriteAccess'] = "false";
                     break;
                 case "String":
                     $cmd->setType('info');
@@ -412,29 +412,36 @@ class OZW extends eqLogic
                     $cmd->setType('info');
                     $cmd->setSubType('binary');
                     $cmd->setDisplay('generic_type', 'GENERIC_INFO');
-                    $item['WriteAccess'] = "false";
-                    #die;
-                    #$cmd->save();
+                    $cmd->save();
                     break;
                 case "Calendar":
-                    $item['WriteAccess'] = "false";
+                    $return = __('Type Calendar non supporté', __FILE__);
+                    log::add('OZW', 'error', $return);
+                    return 'KO ' . $return;
                     break;
                 default:
-                    log::add('OZW', 'error', 'Type inconnu reply : ' . print_r($obj_detail, true));
-                    die;
+                    $return = __('Type inconnu', __FILE__) . ' ' . $type;
+                    log::add('OZW', 'error', $return);
+                    return 'KO ' . $return;
                     break;
             }
+            $return = __('Commande info créée', __FILE__) . ' ' . $item_id;
+            log::add('OZW', 'debug', __FUNCTION__ . ' ' . $return);
+            return 'OK ' . $return;
+        } else {
+            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . print_r($obj_detail, true);
+            log::add('OZW', 'error',  $return);
+            return 'KO ' . $return;
         }
     }
 
-
     private function create_action_command($carte, $item_id)
-    // crée la commande type action
     {
 
         if (is_object(cmd::byEqLogicIdAndLogicalId($this->id, 'A_' . $item_id))) {
-            log::add('OZW', 'info', __('create_action_command ', __FILE__) . $this->name . '  commande action déjà créée ' . 'A_' . $item_id);
-            return '0';
+            $return = __('Commande action déjà créée', __FILE__) . ' ' . $item_id;
+            log::add('OZW', 'info', __FUNCTION__ . ' ' . $return);
+            return 'KO ' . $return;
         }
 
         // lit la description du datapoint
@@ -455,18 +462,8 @@ class OZW extends eqLogic
             $cmd->setName($name);
             $name = $cmd->getName();
 
-            // teste si le nom de la commande est déjà attribué    
-            // si oui, ajoute à la fin un numéro afin d'avoir un nom unique
-            if (is_object(cmd::byEqLogicIdCmdName($this->id, $name))) {
-                $count = 1;
-                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 100) . "..." . $count))) {
-                    $count++;
-                }
-                $cmd->setName(substr($name, 0, 100) . "..." . $count);
-                log::add('OZW', 'info', 'Rename as ' . $cmd->getName());
-            } else {
-                $cmd->setName($name);
-            }
+            $cmd->setName(OZW_getUniqueCmdName($this->getId(), $name));
+
             $cmd->setEqLogic_id($this->getId());
             $cmd->setLogicalId('A_' . $item_id);   // le logical id est égal à 'A_' plus l'id du datapoint
             $cmd->setConfiguration('infoId', $item_id);
@@ -478,7 +475,7 @@ class OZW extends eqLogic
             $cmd->setOrder(time());
             $cmd->setConfiguration('internal_type', $type);
 
-            switch ($obj_detail['Description']['Type']) {
+            switch ($type) {
                 case "DateTime":
                 case "TimeOfDay":
                 case "Scheduler":
@@ -524,20 +521,28 @@ class OZW extends eqLogic
                     $cmd->save();
                     break;
                 default:
-                    log::add('OZW', 'info', 'Error creation action : ' . $item_id . ' (' . $item['Text']['Long'] . ' : ' . $item['WriteAccess'] . ')');
-                    die;
+                    $return = __('Type inconnu', __FILE__) . ' ' . $type;
+                    log::add('OZW', 'error', $return);
+                    return 'KO ' . $return;
                     break;
             }
+            $return = __('Commande action créée', __FILE__) . ' ' . $item_id;
+            log::add('OZW', 'debug', __FUNCTION__ . ' ' . $return);
+            return 'OK ' . $return;
+        } else {
+            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . print_r($obj_detail, true);
+            log::add('OZW', 'error',  $return);
+            return 'KO ' . $return;
         }
     }
 
     private function create_refresh_command($carte, $item_id)
-    // crée la commande type refresh
     {
-
+        
         if (is_object(cmd::byEqLogicIdAndLogicalId($this->id, 'R_' . $item_id))) {
-            log::add('OZW', 'info', __('create_refresh_command ', __FILE__) . $this->name . '  commande refresh déjà créée ' . 'R_' . $item_id);
-            return '0';
+            $return = __('Commande refresh déjà créée', __FILE__) . ' ' . $item_id;
+            log::add('OZW', 'info', __FUNCTION__ . ' ' . $return);
+            return 'KO ' . $return;
         }
 
         // lit la description du datapoint
@@ -557,18 +562,9 @@ class OZW extends eqLogic
             $cmd->setName($name);
             $name = $cmd->getName();
 
-            // teste si le nom de la commande est déjà attribué    
-            // si oui, ajoute à la fin un numéro afin d'avoir un nom unique
-            if (is_object(cmd::byEqLogicIdCmdName($this->id, $name))) {
-                $count = 1;
-                while (is_object(cmd::byEqLogicIdCmdName($this->id, substr($name, 0, 100) . "..." . $count))) {
-                    $count++;
-                }
-                $cmd->setName(substr($name, 0, 100) . "..." . $count);
-                log::add('OZW', 'info', 'Rename as ' . $cmd->getName());
-            } else {
-                $cmd->setName($name);
-            }
+            $cmd->setName(OZW_getUniqueCmdName($this->getId(), $name));
+
+            $return = __('Commande refresh ', __FILE__) . ' ' . $item_id . ' uniqname ' . $cmd->getName();
             $cmd->setEqLogic_id($this->getId());
             $cmd->setLogicalId('R_' . $item_id);   // le logical id est égal à 'R_' plus l'id du datapoint
             $cmd->setConfiguration('infoId', $item_id);
@@ -580,6 +576,13 @@ class OZW extends eqLogic
             $cmd->setConfiguration('minValue', '0');
             $cmd->setConfiguration('maxValue', '60');
             $cmd->save();
+            $return = __('Commande refresh créée', __FILE__) . ' ' . $item_id;
+            log::add('OZW', 'debug', __FUNCTION__ . ' ' . $return);
+            return 'OK ' . $return;
+        } else {
+            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . print_r($obj_detail, true);
+            log::add('OZW', 'error',  $return);
+            return 'KO ' . $return;
         }
     }
 
@@ -589,7 +592,6 @@ class OZW extends eqLogic
             $this->setConfiguration('type', 'OZW');
         }
     }
-
 
     public function preRemove()
     {
@@ -604,7 +606,6 @@ class OZW extends eqLogic
         }
         return true;
     }
-
 
     public function postInsert()
     {
@@ -680,14 +681,14 @@ class OZW extends eqLogic
     {
         $cron_OZW = cron::byClassAndFunction('OZW', 'update');
         if (!is_object($cron_OZW)) {
-            log::add('OZW', 'info', 'Lancement de cron');
+            log::add('OZW', 'info', __('Lancement de cron', __FILE__));
             OZW::update();
         }
     }
 
     public static function update()
     {
-        log::add('OZW', 'info', 'Lancement de update');
+        log::add('OZW', 'info', __('Lancement de update', __FILE__));
         foreach (eqLogic::byTypeAndSearchConfiguration('OZW', '"type":"appareil"') as $eqLogic) {
             if ($eqLogic->getIsEnable()) {
                 OZW::OZW_Update($eqLogic);
@@ -697,7 +698,7 @@ class OZW extends eqLogic
 
     public static function OZW_Update($_eqLogic, $_context = 'cron')
     {
-        log::add('OZW', 'info', 'OZW_Update Appareil : ' . $_eqLogic->getName() . ' Contexte ' . $_context);
+        log::add('OZW', 'info', __FUNCTION__ . ' ' . __('Appareil', __FILE__) . ' : ' . $_eqLogic->getName() . ' ' . __('Contexte', __FILE__) . ' ' . $_context);
 
 
         $carte = $_eqLogic->getParent();
@@ -753,10 +754,10 @@ class OZW extends eqLogic
 
     function refresh_info_cmd($_carte, $_cmd)
     {
-        log::add('OZW', 'debug', 'Read datapoint ' . $_cmd->getLogicalId() . ' ' . $_cmd->getName());
+        log::add('OZW', 'debug', __FUNCTION__ . ' ' . __('Read datapoint', __FILE__) . ' ' . $_cmd->getLogicalId() . ' ' . $_cmd->getName());
         $obj = OZW::OZW_api($_carte, 'menutree/read_datapoint.json?&SessionId=%id%&Id=' . $_cmd->getLogicalId());
         if (isset($obj['Result']['Success']) && $obj['Result']['Success'] !== "false") {
-            log::add('OZW', 'info', 'Read de ' . $_cmd->getLogicalId() . ' ' . $_cmd->getName() . ' --> ' . $obj['Data']['Value']);
+            log::add('OZW', 'info', __FUNCTION__ . ' ' . __('lecture de', __FILE__) . ' ' . $_cmd->getLogicalId() . ' ' . $_cmd->getName() . ' --> ' . $obj['Data']['Value']);
             $eqLogic = $_cmd->getEqlogic();
             $eqLogic->checkAndUpdateCmd($_cmd, $obj['Data']['Value']);
             return true;
@@ -766,6 +767,22 @@ class OZW extends eqLogic
     }
 }
 
+function OZW_getUniqueCmdName($eqLogicId, $name)
+{
+    // teste si le nom de la commande est déjà attribué
+    // si oui, ajoute à la fin un numéro afin d'avoir un nom unique
+    if (!is_object(cmd::byEqLogicIdCmdName($eqLogicId, $name))) {
+        return $name;
+    }
+
+    $count = 1;
+    while (is_object(cmd::byEqLogicIdCmdName($eqLogicId, substr($name, 0, 100) . "..." . $count))) {
+        $count++;
+    }
+    $name = substr($name, 0, 100) . "..." . $count;
+    logSNMP3(__('Renomme en', __FILE__) . ' ' . $name, 'info');
+    return $name;
+}
 class OZWCmd extends cmd
 {
 
