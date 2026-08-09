@@ -175,8 +175,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 <div class="col-sm-6">
                   <select id="sel_icon" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="icon">
                     <option value="none">{{Aucun}}</option>
-                    <option value="OZW672">{{OZW672}}</option>
-                    <option value="OZW772">{{OZW772}}</option>
+                    <option value="OZW672">OZW672</option>
+                    <option value="OZW772">OZW772</option>
                     <option value="Chaudiere">{{Chaudière}}</option>
                     <option value="PAC">{{Pompe à chaleur}}</option>
                     <option value="Climatisation">{{Climatisation}}</option>
