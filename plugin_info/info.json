@@ -1,23 +1,28 @@
 {
-	"id" : "OZW",
-	"name" : "OZW",
-	"description" : {
-		"fr_FR": "Plugin permettant de s'interfacer avec les controleurs SIEMENS de type OZW"
+	"id": "OZW",
+	"name": "OZW",
+	"description": {
+		"fr_FR": "Plugin permettant de s'interfacer avec les controleurs SIEMENS de type OZW",
+		"en_US": "Plugin for interfacing with SIEMENS OZW-type controllers",
+		"es_ES": "Complemento que permite la conexión con los controladores SIEMENS del tipo OZW",
+		"de_DE": "Plugin zur Anbindung an SIEMENS-Steuerungen vom Typ OZW"
 	},
-	"licence" : "AGPL",
-	"author" : "Bernard Dandrea",
-	"require" : "4.4.0",
-	"category" : "devicecommunication",
-	"hasDependency" : false,
-	"hasOwnDeamon" : false,
-	"maxDependancyInstallTime" : 0,
-	"changelog" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/changelog",
-	"documentation" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/index",
-	"changelog_beta" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/changelog_beta",
-	"documentation_beta" : "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/index",
-	"link" : {
-	},
+	"licence": "AGPL",
+	"author": "Bernard Dandrea",
+	"require": "4.4.0",
+	"category": "devicecommunication",
+	"hasDependency": false,
+	"hasOwnDeamon": false,
+	"maxDependancyInstallTime": 0,
+	"changelog": "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/changelog",
+	"documentation": "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/index",
+	"changelog_beta": "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/changelog_beta",
+	"documentation_beta": "https://bernard-dandrea.github.io/documentation/jeedom-OZW/doc/#language#/index",
+	"link": {},
 	"language": [
+		"de_DE",
+		"en_US",
+		"es_ES",
 		"fr_FR"
 	],
 	"compatibility": [
@@ -31,4 +36,3 @@
 		"atlas"
 	]
 }
-
