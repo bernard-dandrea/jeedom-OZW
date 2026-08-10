@@ -1,7 +1,7 @@
 <?php
 
 
-// Last Modified : 2026/08/09 16:55:21
+// Last Modified : 2026/08/10 07:06:20
 
 /* This file is part of Jeedom.
  *
@@ -109,7 +109,7 @@ class OZW extends eqLogic
             throw new \Exception(__('L\'OZW ne repond pas.', __FILE__));
         }
         $obj = json_decode($json, TRUE);
-        log::add('OZW', 'debug', __FUNCTION__ . ' ' . 'data : ' . print_r($obj, true));
+        log::add('OZW', 'debug', __FUNCTION__ . ' ' . 'data : ' . FormatArrayForLog($obj));
         if ((isset($obj['Result']['Success']) && $obj['Result']['Success'] !== "false") == false) {
             if (isset($obj['Result']['Error']['Txt'])) {
                 // si le session ID est expiré, en récupére un nouveau et retente le call API une seule fois
@@ -235,7 +235,7 @@ class OZW extends eqLogic
                 }
             }
         } else {
-            $return = __('Erreur lecture du device', __FILE__) . ' ' . print_r($obj, true);
+            $return = __('Erreur lecture du device', __FILE__) . ' ' . FormatArrayForLog($obj);
             log::add('OZW', 'error',  $return);
             return 'KO ' . $return;
         }
@@ -258,7 +258,7 @@ class OZW extends eqLogic
                 log::add('OZW', 'debug', __('Ne trouve pas le', __FILE__) . ' TreeItem : ' . $obj['Result']['Error']['Txt']);
             }
         } else {
-            $return = __('Erreur lecture des commandes principales', __FILE__) . ' ' . print_r($obj, true);
+            $return = __('Erreur lecture des commandes principales', __FILE__) . ' ' . FormatArrayForLog($obj);
             log::add('OZW', 'error',  $return);
             return 'KO ' . $return;
         }
@@ -284,7 +284,7 @@ class OZW extends eqLogic
                 $this->MenuImport($item['Id']);
             }
         } else {
-            $return = __('Erreur lecture menu', __FILE__) . ' ' . print_r($obj, true);
+            $return = __('Erreur lecture menu', __FILE__) . ' ' . FormatArrayForLog($obj);
             log::add('OZW', 'error',  $return);
             return 'KO ' . $return;
         }
@@ -429,7 +429,7 @@ class OZW extends eqLogic
             log::add('OZW', 'debug', __FUNCTION__ . ' ' . $return);
             return 'OK ' . $return;
         } else {
-            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . print_r($obj_detail, true);
+            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . FormatArrayForLog($obj_detail);
             log::add('OZW', 'error',  $return);
             return 'KO ' . $return;
         }
@@ -530,7 +530,7 @@ class OZW extends eqLogic
             log::add('OZW', 'debug', __FUNCTION__ . ' ' . $return);
             return 'OK ' . $return;
         } else {
-            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . print_r($obj_detail, true);
+            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . FormatArrayForLog($obj_detail);
             log::add('OZW', 'error',  $return);
             return 'KO ' . $return;
         }
@@ -580,7 +580,7 @@ class OZW extends eqLogic
             log::add('OZW', 'debug', __FUNCTION__ . ' ' . $return);
             return 'OK ' . $return;
         } else {
-            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . print_r($obj_detail, true);
+            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . FormatArrayForLog($obj_detail);
             log::add('OZW', 'error',  $return);
             return 'KO ' . $return;
         }
@@ -765,6 +765,18 @@ class OZW extends eqLogic
             return false;
         }
     }
+}
+
+function FormatArrayForLog($value)
+{
+    $options = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE;
+    $encoded = json_encode($value, $options);
+
+    if ($encoded === false) {
+        return json_encode((string) $value, $options);
+    }
+
+    return $encoded;
 }
 
 function OZW_getUniqueCmdName($eqLogicId, $name)
