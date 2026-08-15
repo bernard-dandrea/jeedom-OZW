@@ -5,7 +5,9 @@
 		"fr_FR": "Plugin permettant de s'interfacer avec les controleurs SIEMENS de type OZW",
 		"en_US": "Plugin for interfacing with SIEMENS OZW-type controllers",
 		"es_ES": "Complemento que permite la conexión con los controladores SIEMENS del tipo OZW",
-		"de_DE": "Plugin zur Anbindung an SIEMENS-Steuerungen vom Typ OZW"
+		"de_DE": "Plugin zur Anbindung an SIEMENS-Steuerungen vom Typ OZW",
+		"it_IT": "Plugin che consente l'interfacciamento con i controller SIEMENS di tipo OZW",
+		"pt_PT": "Plugin que permite a ligação com os controladores SIEMENS do tipo OZW"
 	},
 	"licence": "AGPL",
 	"author": "Bernard Dandrea",
