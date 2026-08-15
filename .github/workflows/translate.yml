@@ -1,7 +1,10 @@
 name: translate
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {} # Indique explicitement à GitHub un déclencheur manuel sans paramètres
+  push:
+    branches:
+      - beta
 
 jobs:
   auto-translate:
