@@ -1,7 +1,7 @@
 <?php
 
 
-// Last Modified : 2026/08/14 19:14:17
+// Last Modified : 2026/08/15 07:40:42
 
 /* This file is part of Jeedom.
  *
@@ -239,6 +239,7 @@ class OZW extends eqLogic
         }
 
         if (isset($obj['Devices'])) {
+            $added = 0;
             foreach ($obj['Devices'] as $item) {
                 if (!is_object(self::byLogicalId($item['SerialNr'], 'OZW'))) {
                     log::add('OZW', 'info', __('Creation appareil', __FILE__) . ' : ' . $item['Type'] . ' (' .  $item['SerialNr']  . ')');
@@ -253,13 +254,13 @@ class OZW extends eqLogic
                         ->setIsEnable(1)
                         ->setIsVisible(1);
                     $eqLogic->save();
-                    return 'OK ' . __('Devices importés');
+                    $added++;
+                    log::add('OZW', 'info', __('Appareil importé: serial number =', __FILE__)  . ' : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')');
                 } else {
-                    $return = __('Appareil déjà créé', __FILE__) . ' : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')';
-                    log::add('OZW', 'info', $return);
-                    return 'KO ' . $return;
+                    log::add('OZW', 'info', __('Appareil déjà créé', __FILE__) . ' : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')');
                 }
             }
+            return 'OK ' . __('Appareils importés: ', __FILE__) . ' : ' . $added;
         } else {
             $return = __('Erreur lecture du device', __FILE__) . ' ' . $this->getName() . ' ' . self::FormatArrayForLog($obj);
             log::add('OZW', 'error',  $return);
