@@ -111,7 +111,7 @@ function addCmdToTable(_cmd) {
     }
     tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i></td>'
     tr += '</tr>'
-    
+
     let newRow = document.createElement('tr')
     newRow.innerHTML = tr
     newRow.addClass('cmd')
@@ -173,6 +173,7 @@ document.querySelector('#bt_devices_import').addEventListener('click', function 
             handleAjaxError(request, status, error)
         },
         success: function (data) {
+            console.dir(data)
             if (data.state != 'ok') {
                 jeedomUtils.showAlert({
                     message: data.result,
@@ -184,20 +185,15 @@ document.querySelector('#bt_devices_import').addEventListener('click', function 
             var level = 'success';
             if (message.substr(0, 2) === 'KO') {
                 level = 'warning';
-                if (message.length >= 4) {
-                    message = message.substr(3);
-                }
             }
-            else {
-                message = options.successMessage
+            if (message.length >= 4) {
+                message = message.substr(3);
             }
             jeedomUtils.showAlert({
                 message: message,
                 level: level
             })
 
-            if (level === 'success')
-                window.location.reload();
         }
     }
     domUtils.ajax(paramsAJAX);
@@ -233,18 +229,14 @@ document.querySelector('#bt_main_commands_import').addEventListener('click', fun
             var level = 'success';
             if (message.substr(0, 2) === 'KO') {
                 level = 'warning';
-                if (message.length >= 4) {
-                    message = message.substr(3);
-                }
             }
-            else {
-                message = options.successMessage
+            if (message.length >= 4) {
+                message = message.substr(3);
             }
             jeedomUtils.showAlert({
                 message: message,
                 level: level
             })
-
             if (level === 'success')
                 window.location.reload();
         }
@@ -289,18 +281,14 @@ document.querySelector('#bt_MenuImport').addEventListener('click', function () {
                     var level = 'success';
                     if (message.substr(0, 2) === 'KO') {
                         level = 'warning';
-                        if (message.length >= 4) {
-                            message = message.substr(3);
-                        }
                     }
-                    else {
-                        message = options.successMessage
+                    if (message.length >= 4) {
+                        message = message.substr(3);
                     }
                     jeedomUtils.showAlert({
                         message: message,
                         level: level
                     })
-
                     if (level === 'success')
                         window.location.reload();
                 }
@@ -350,12 +338,9 @@ function createCommandFromPrompt(options) {
                     var level = 'success';
                     if (message.substr(0, 2) === 'KO') {
                         level = 'warning';
-                        if (message.length >= 4) {
-                            message = message.substr(3);
-                        }
                     }
-                    else {
-                        message = options.successMessage
+                    if (message.length >= 4) {
+                        message = message.substr(3);
                     }
                     jeedomUtils.showAlert({
                         message: message,
