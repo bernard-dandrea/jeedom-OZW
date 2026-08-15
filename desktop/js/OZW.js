@@ -1,7 +1,7 @@
 /* This file is part of Jeedom.
 *
 
-// Last Modified : 2026/08/15 17:15:51
+// Last Modified : 2026/08/15 17:42:18
 
 * Jeedom is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -360,21 +360,18 @@ function createCommandFromPrompt(options) {
 
 document.querySelector('#bt_create_info_command').addEventListener('click', function () {
     createCommandFromPrompt({
-        _info: 'X',
-        successMessage: '{{Datapoint créé}}'
+        _info: 'X'
     });
 });
 
 document.querySelector('#bt_create_action_command').addEventListener('click', function () {
     createCommandFromPrompt({
-        _action: 'X',
-        successMessage: '{{Commande de modification du Datapoint créée}}'
+        _action: 'X'
     });
 });
 
 document.querySelector('#bt_create_refresh_command').addEventListener('click', function () {
     createCommandFromPrompt({
-        _refresh: 'X',
-        successMessage: '{{Commande refresh du Datapoint créée}}'
+        _refresh: 'X'
     });
 });
