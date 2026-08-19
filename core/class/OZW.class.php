@@ -1,7 +1,7 @@
 <?php
 
 
-// Last Modified : 2026/08/15 07:44:51
+// Last Modified : 2026/08/15 11:10:07
 
 /* This file is part of Jeedom.
  *
@@ -260,7 +260,9 @@ class OZW extends eqLogic
                     log::add('OZW', 'info', __('Appareil déjà créé', __FILE__) . ' : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')');
                 }
             }
-            return 'OK ' . __('Appareils importés: ', __FILE__) . ' : ' . $added;
+            $return=__('Appareils importés: ', __FILE__) . ' : ' . (string)$added;
+            log::add('OZW', 'info', $return);
+            return 'OK ' . $return;
         } else {
             $return = __('Erreur lecture du device', __FILE__) . ' ' . $this->getName() . ' ' . self::FormatArrayForLog($obj);
             log::add('OZW', 'error',  $return);
