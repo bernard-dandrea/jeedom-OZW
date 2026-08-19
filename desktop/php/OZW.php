@@ -1,6 +1,6 @@
 <?php
 
-// Last Modified : 2026/08/10 07:00:53
+// Last Modified : 2026/08/19 06:20:23
 
 /* This file is part of Jeedom.
 *
@@ -90,6 +90,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
     <div class="input-group pull-right" style="display:inline-flex;">
       <span class="input-group-btn">
         <!-- Les balises <a></a> sont volontairement fermées à la ligne suivante pour éviter les espaces entre les boutons. Ne pas modifier -->
+        <a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="copy"><i
+            class="fas fa-copy"></i><span class="hidden-xs"> {{Dupliquer}}</span>
+        </a>
         <a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fas fa-cogs"></i><span class="hidden-xs"> {{Configuration avancée}}</span>
         </a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}
         </a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}
