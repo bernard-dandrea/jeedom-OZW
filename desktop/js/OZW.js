@@ -1,7 +1,7 @@
 /* This file is part of Jeedom.
 *
 
-// Last Modified : 2026/08/15 17:42:18
+// Last Modified : 2026/08/20 17:42:14
 
 * Jeedom is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -151,7 +151,7 @@ function printEqLogic(_eqLogic) {
 document.getElementById('bt_gotoOZW').addEventListener('click', function () {
 
     var ipElem = document.querySelector('.eqLogicAttr[data-l2key=ip]');
-    var ip = (ipElem ? ipElem.value : '').trim();
+    var ip = (ipElem ? ipElem.jeeValue() : '').trim();
     if (!ip) {
         return;
     }
@@ -162,7 +162,7 @@ document.getElementById('bt_gotoOZW').addEventListener('click', function () {
 
 document.querySelector('#bt_devices_import').addEventListener('click', function () {
 
-    var eqLogicId = document.querySelector('.eqLogicAttr[data-l1key="id"]').value;
+    var eqLogicId = document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue();
 
     var paramsAJAX = {
         type: "POST",
@@ -207,7 +207,7 @@ document.querySelector('#bt_devices_import').addEventListener('click', function 
 
 document.querySelector('#bt_main_commands_import').addEventListener('click', function () {
 
-    var eqLogicId = document.querySelector('.eqLogicAttr[data-l1key="id"]').value;
+    var eqLogicId = document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue();
 
     var paramsAJAX = {
         type: "POST",
@@ -250,7 +250,7 @@ document.querySelector('#bt_main_commands_import').addEventListener('click', fun
 
 document.querySelector('#bt_MenuImport').addEventListener('click', function () {
 
-    var eqLogicId = document.querySelector('.eqLogicAttr[data-l1key="id"]').value;
+    var eqLogicId = document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue();
     jeeDialog.prompt({
         message: '{{ Référence WEB du menu ?}}'
     },
@@ -302,7 +302,7 @@ document.querySelector('#bt_MenuImport').addEventListener('click', function () {
 
 
 function createCommandFromPrompt(options) {
-    var eqLogicId = document.querySelector('.eqLogicAttr[data-l1key="id"]').value;
+    var eqLogicId = document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue();
 
     jeeDialog.prompt({
         message: '{{ Référence WEB du datapoint ?}}'
