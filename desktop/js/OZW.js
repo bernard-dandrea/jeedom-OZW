@@ -1,30 +1,18 @@
-/* This file is part of Jeedom.
-*
+// Last Modified : 2026/08/22 18:42:15
 
-// Last Modified : 2026/08/20 17:42:14
-
-* Jeedom is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Jeedom is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
-*/
-
+/*
+ * Copyright (C) 2026 Bernard Dandrea
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * https://www.gnu.org/licenses/gpl-3.0.html
+ */
 
 /* Fonction permettant l'affichage des commandes dans l'équipement */
 function addCmdToTable(_cmd) {
 
 
-    if (document.getElementById('table_cmd') == null) return
-    if (document.querySelector('#table_cmd thead') == null) {
-        table = '<thead>'
+    if (document.getElementById('table_cmd') === null) return
+    if (document.querySelector('#table_cmd thead') === null) {
+        let table = '<thead>'
         table += '<tr>'
         table += '<th style="min-width:50px;width:70px;">ID</th>'
         table += '<th>{{Nom}}</th>'
@@ -43,7 +31,7 @@ function addCmdToTable(_cmd) {
     }
 
     if (!isset(_cmd)) {
-        var _cmd = { configuration: {} }
+        _cmd = { configuration: {} }
     }
     if (!isset(_cmd.configuration)) {
         _cmd.configuration = {}
@@ -58,9 +46,11 @@ function addCmdToTable(_cmd) {
     tr += '<span class="input-group-btn"><a class="cmdAction btn btn-sm btn-default" data-l1key="chooseIcon" title="{{Choisir une icône}}"><i class="fas fa-icons"></i></a></span>'
     tr += '<span class="cmdAttr input-group-addon roundedRight" data-l1key="display" data-l2key="icon" style="font-size:19px;padding:0 5px 0 0!important;"></span>'
     tr += '</div>'
-    tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display:none;margin-top:5px;" title="{{Commande info liée}}">'
-    tr += '<option value="">{{Aucune}}</option>'
-    tr += '</select>'
+    if (init(_cmd.type) === 'action' && init(_cmd.logicalId).startsWith('A_')) {
+        tr += '<select class="hidden-xs cmdAttr form-control input-sm" data-l1key="value" style="display:none;margin-top:5px;" title="{{Commande info liée}}">'
+        tr += '<option value="">{{Aucune}}</option>'
+        tr += '</select>'
+    }
     tr += '</td>'
     tr += '<td>';
     tr += '<input class="cmdAttr form-control input-sm " data-l1key="logicalId" placeholder="logicalID">'
@@ -73,7 +63,7 @@ function addCmdToTable(_cmd) {
     tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isVisible" checked/>{{Afficher}}</label> '
     tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="isHistorized" checked/>{{Historiser}}</label> '
     tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label> '
-    if (init(_cmd.type) == "info" && is_numeric(init(_cmd.logicalId))) {
+    if (init(_cmd.type) === "info" && is_numeric(init(_cmd.logicalId))) {
         tr += '<label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="isCollected" checked/>{{Update}}</label> ';
     }
 
@@ -84,10 +74,10 @@ function addCmdToTable(_cmd) {
     tr += '</div>'
     tr += '</td>'
 
-    if ($OZWtype != 'OZW') {
-        if (init(_cmd.type) == "info" && is_numeric(init(_cmd.logicalId))) {
+    if (window.OZWtype !== 'OZW') {
+        if (init(_cmd.type) === "info" && is_numeric(init(_cmd.logicalId))) {
             tr += '<td>';
-            tr += '<select id="sel_cron" class="cmdAttr form-control" data-l1key="configuration" data-l2key="cron"> '
+            tr += '<select class="cmdAttr form-control" data-l1key="configuration" data-l2key="cron"> '
             tr += '<option value="none">{{Aucun}}</option> '
             tr += '<option value="cron">{{Toutes les minutes}}</option> '
             tr += '<option value="cron5">{{Toutes les 5 minutes}}</option> '
@@ -95,7 +85,7 @@ function addCmdToTable(_cmd) {
             tr += '<option value="cron15">{{Toutes les 15 minutes}}</option> '
             tr += '<option value="cron30">{{Toutes les 30 minutes}}</option> '
             tr += '<option value="cronHourly">{{Toutes les heures}}</option> '
-            tr += '<option value="cronDaily">{{Toutes les jours}}</option> '
+            tr += '<option value="cronDaily">{{Tous les jours}}</option> '
             tr += '</select> '
             tr += '</td>';
         }
@@ -115,37 +105,53 @@ function addCmdToTable(_cmd) {
     tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i></td>'
     tr += '</tr>'
 
-    let newRow = document.createElement('tr')
-    newRow.innerHTML = tr
-    newRow.addClass('cmd')
-    newRow.setAttribute('data-cmd_id', init(_cmd.id))
-    document.getElementById('table_cmd').querySelector('tbody').appendChild(newRow)
+    const temp = document.createElement('tbody')
+    temp.innerHTML = tr
+    const newRow = temp.firstElementChild
+    document.querySelector('#table_cmd tbody').appendChild(newRow)
 
-    jeedom.eqLogic.buildSelectCmd({
-        id: document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue(),
-        filter: { type: 'info' },
-        error: function (error) {
-            jeedomUtils.showAlert({ message: error.message, level: 'danger' })
-        },
-        success: function (result) {
-            newRow.querySelector('.cmdAttr[data-l1key="value"]')?.insertAdjacentHTML('beforeend', result)
-            newRow.setJeeValues(_cmd, '.cmdAttr')
-            jeedom.cmd.changeType(newRow, init(_cmd.subType))
-        }
-    })
+    const valueField = newRow.querySelector('.cmdAttr[data-l1key="value"]')
+    if (valueField) {
+        jeedom.eqLogic.buildSelectCmd({
+            id: document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue(),
+            filter: { type: 'info' },
+            error: function (error) {
+                jeedomUtils.showAlert({ message: error.message, level: 'danger' })
+            },
+            success: function (result) {
+                // comme la fonction est executée en asynchrone, il est nécessaire de faire les mises à jour des commandes dans le success
+                valueField.insertAdjacentHTML('beforeend', result)
+                newRow.setJeeValues(_cmd, '.cmdAttr')
+                jeedom.cmd.changeType(newRow, init(_cmd.subType))
+            }
+        })
+    } else {
+        // evite de lire les commandes info à chaque fois
+        newRow.setJeeValues(_cmd, '.cmdAttr')
+        jeedom.cmd.changeType(newRow, init(_cmd.subType))
+    }
 }
 
 
 function printEqLogic(_eqLogic) {
-    if (_eqLogic.configuration.type == 'OZW') {
-        $('.carte_only').show();
-        $('.nocarte_only').hide();
+
+    window.OZWtype = _eqLogic.configuration.type
+
+    if (window.OZWtype === 'OZW') {
+        document.querySelectorAll('.carte_only').forEach(el => {
+            el.style.display = ''
+        })
+        document.querySelectorAll('.nocarte_only').forEach(el => {
+            el.style.display = 'none'
+        })
+    } else {
+        document.querySelectorAll('.carte_only').forEach(el => {
+            el.style.display = 'none'
+        })
+        document.querySelectorAll('.nocarte_only').forEach(el => {
+            el.style.display = ''
+        })
     }
-    else {
-        $('.carte_only').hide();
-        $('.nocarte_only').show();
-    }
-    $OZWtype = _eqLogic.configuration.type;
 }
 
 document.getElementById('bt_gotoOZW').addEventListener('click', function () {
@@ -156,7 +162,7 @@ document.getElementById('bt_gotoOZW').addEventListener('click', function () {
         return;
     }
     var url = 'http://' + ip + '/';
-    window.open(url);
+    window.open(url, '_blank');
 });
 
 
@@ -177,7 +183,7 @@ document.querySelector('#bt_devices_import').addEventListener('click', function 
         },
         success: function (data) {
             console.dir(data)
-            if (data.state != 'ok') {
+            if (data.state !== 'ok') {
                 jeedomUtils.showAlert({
                     message: data.result,
                     level: 'danger'
@@ -186,23 +192,24 @@ document.querySelector('#bt_devices_import').addEventListener('click', function 
             }
             var message = data.result;
             var level = 'success';
-            if (message.substr(0, 2) === 'KO') {
+            if (message.startsWith('KO')) {
                 level = 'warning';
             }
             if (message.length >= 4) {
-                message = message.substr(3);
+                message = message.substring(3);
             }
             jeedomUtils.showAlert({
                 message: message,
                 level: level
             })
-
+            setTimeout(function () {
+                location.reload()
+            }, 3000)
         }
     }
     domUtils.ajax(paramsAJAX);
 
 });
-
 
 
 document.querySelector('#bt_main_commands_import').addEventListener('click', function () {
@@ -221,7 +228,7 @@ document.querySelector('#bt_main_commands_import').addEventListener('click', fun
             handleAjaxError(request, status, error)
         },
         success: function (data) {
-            if (data.state != 'ok') {
+            if (data.state !== 'ok') {
                 jeedomUtils.showAlert({
                     message: data.result,
                     level: 'danger'
@@ -230,18 +237,20 @@ document.querySelector('#bt_main_commands_import').addEventListener('click', fun
             }
             var message = data.result;
             var level = 'success';
-            if (message.substr(0, 2) === 'KO') {
+            if (message.startsWith('KO')) {
                 level = 'warning';
             }
             if (message.length >= 4) {
-                message = message.substr(3);
+                message = message.substring(3);
             }
             jeedomUtils.showAlert({
                 message: message,
                 level: level
             })
             if (level === 'success')
-                window.location.reload();
+                setTimeout(function () {
+                    location.reload()
+                }, 3000)
         }
     }
     domUtils.ajax(paramsAJAX);
@@ -255,10 +264,9 @@ document.querySelector('#bt_MenuImport').addEventListener('click', function () {
         message: '{{ Référence WEB du menu ?}}'
     },
         function (result) {
-            if (result === null)
+            if (typeof result !== 'string' || result.trim() === '') {
                 return
-            if (result == '')
-                result
+            }
 
             var paramsAJAX = {
                 type: "POST",
@@ -273,7 +281,7 @@ document.querySelector('#bt_MenuImport').addEventListener('click', function () {
                     handleAjaxError(request, status, error)
                 },
                 success: function (data) {
-                    if (data.state != 'ok') {
+                    if (data.state !== 'ok') {
                         jeedomUtils.showAlert({
                             message: data.result,
                             level: 'danger'
@@ -282,18 +290,20 @@ document.querySelector('#bt_MenuImport').addEventListener('click', function () {
                     }
                     var message = data.result;
                     var level = 'success';
-                    if (message.substr(0, 2) === 'KO') {
+                    if (message.startsWith('KO')) {
                         level = 'warning';
                     }
                     if (message.length >= 4) {
-                        message = message.substr(3);
+                        message = message.substring(3);
                     }
                     jeedomUtils.showAlert({
                         message: message,
                         level: level
                     })
                     if (level === 'success')
-                        window.location.reload();
+                        setTimeout(function () {
+                            location.reload()
+                        }, 3000)
                 }
             }
             domUtils.ajax(paramsAJAX);
@@ -308,10 +318,9 @@ function createCommandFromPrompt(options) {
         message: '{{ Référence WEB du datapoint ?}}'
     },
         function (result) {
-            if (result === null)
+            if (typeof result !== 'string' || result.trim() === '') {
                 return
-            if (result == '')
-                result
+            }
 
             var paramsAJAX = {
                 type: "POST",
@@ -329,7 +338,7 @@ function createCommandFromPrompt(options) {
                     handleAjaxError(request, status, error)
                 },
                 success: function (data) {
-                    if (data.state != 'ok') {
+                    if (data.state !== 'ok') {
                         jeedomUtils.showAlert({
                             message: data.result,
                             level: 'danger'
@@ -339,11 +348,11 @@ function createCommandFromPrompt(options) {
 
                     var message = data.result;
                     var level = 'success';
-                    if (message.substr(0, 2) === 'KO') {
+                    if (message.startsWith('KO')) {
                         level = 'warning';
                     }
                     if (message.length >= 4) {
-                        message = message.substr(3);
+                        message = message.substring(3);
                     }
                     jeedomUtils.showAlert({
                         message: message,
@@ -351,7 +360,9 @@ function createCommandFromPrompt(options) {
                     })
 
                     if (level === 'success')
-                        window.location.reload();
+                        setTimeout(function () {
+                            location.reload()
+                        }, 3000)
                 }
             }
             domUtils.ajax(paramsAJAX);

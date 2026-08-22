@@ -1,23 +1,12 @@
 <?php
 
-// Last Modified : 2026/08/19 06:23:16
+// Last Modified : 2026/08/22 18:43:48
 
-/* This file is part of Jeedom.
-*
-* Jeedom is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Jeedom is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
-*/
-
+/*
+ * Copyright (C) 2026 Bernard Dandrea
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * https://www.gnu.org/licenses/gpl-3.0.html
+ */
 
 if (!isConnect('admin')) {
   throw new Exception('{{401 - Accès non autorisé}}');
@@ -89,11 +78,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
     <!-- barre de gestion de l'équipement -->
     <div class="input-group pull-right" style="display:inline-flex;">
       <span class="input-group-btn">
-        <!-- Les balises <a></a> sont volontairement fermées à la ligne suivante pour éviter les espaces entre les boutons. Ne pas modifier -->
+        <!--
+        Ne pas ajouter de retour à la ligne ni d'espace entre les balises </a> et <a>.
+        Les boutons sont volontairement adjacents pour éviter un espace
+        visuel entre eux avec le rendu inline/inline-block de Bootstrap.
+        -->
+        <!-- Pas de duplication, il faut passer par la synchronisation      -->
         <a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fas fa-cogs"></i><span class="hidden-xs"> {{Configuration avancée}}</span>
         </a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}
-        </a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}
-        </a>
+        </a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
       </span>
     </div>
     <!-- Onglets -->
@@ -155,11 +148,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
               </div>
               <div class="form-group">
                 <label class="col-sm-4 control-label"></label>
-                <div class="col-sm-4">
-                  <a class="btn btn-default carte_only" id="bt_gotoOZW"><i class="fa fa-cogs"></i> {{Accéder à l'OZW}}</a>
-                  <a class="btn btn-default carte_only" id="bt_devices_import"><i class="fa fa-refresh"></i> {{Importer les devices}}</a>
-                  <a class="btn btn-default nocarte_only" id="bt_main_commands_import"><i class="fas fa-plus-circle"></i> {{Importer les commandes principales}}</a>
-                  <a class="btn btn-default nocarte_only" id="bt_MenuImport"><i class="fas fa-plus-circle"></i> {{Importer un menu}}</a>
+                <div class="col-sm-8">
+                  <a class="btn btn-default cursor carte_only" id="bt_gotoOZW"><i class="fa fa-cogs"></i> {{Accéder à l'OZW}}</a>
+                  <a class="btn btn-default cursor carte_only" id="bt_devices_import"><i class="fa fa-refresh"></i> {{Importer les devices}}</a>
+                  <a class="btn btn-default cursor nocarte_only" id="bt_main_commands_import"><i class="fas fa-plus-circle"></i> {{Importer les commandes principales}}</a>
+                  <a class="btn btn-default cursor nocarte_only" id="bt_MenuImport"><i class="fas fa-plus-circle"></i> {{Importer un menu}}</a>
                 </div>
               </div>
 
