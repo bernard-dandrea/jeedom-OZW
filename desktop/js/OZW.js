@@ -1,4 +1,4 @@
-// Last Modified : 2026/08/22 18:42:15
+// Last Modified : 2026/08/22 20:01:37
 
 /*
  * Copyright (C) 2026 Bernard Dandrea
@@ -162,7 +162,7 @@ document.getElementById('bt_gotoOZW').addEventListener('click', function () {
         return;
     }
     var url = 'http://' + ip + '/';
-    window.open(url, '_blank');
+    window.open(url);
 });
 
 
