@@ -5,7 +5,7 @@
         "OZW eqLogic non trouvé : ": "OZW eqLogic not found: "
     },
     "plugins\/OZW\/core\/class\/OZW.class.php": {
-        "Activation du cron de OZW": "Enabling the OZW cron job",
+        "Activation du cron de %1$s": "Enabling the %1$s cron job",
         "Adresse IP non définie pour l EqLogicId": "IP address not defined for EqLogicId",
         "Appareil": "Device",
         "Appareil déjà créé": "Device already created",
@@ -21,7 +21,8 @@
         "Commande refresh déjà créée": "Refresh command already created",
         "Contexte": "Background",
         "Creation appareil": "Device Creation",
-        "Désactivation du cron de OZW": "Disabling the OZW cron job",
+        "Désactivation du cron de %1$s": "Disabling the cron job for %1$s",
+        "Equipement désactivé impossible d\\'éxecuter la commande :": "Device disabled; unable to execute the command:",
         "Erreur de communication avec l\\'OZW": "Communication error with the OZW",
         "Erreur exécution action": "Error executing action",
         "Erreur exécution action, type non géré": "Action execution error, unhandled type",
@@ -32,6 +33,7 @@
         "Erreur lecture du menu": "Error reading the menu",
         "Erreur lecture menu": "Error reading menu",
         "Execute API sur": "Execute API on",
+        "Impossible de créer le RadioButton": "Unable to create the RadioButton",
         "L\\'OZW ne repond pas.": "The OZW is not responding.",
         "Lancement de cron": "Running cron",
         "Lancement de update": "Update Release",
@@ -39,7 +41,7 @@
         "OZW erreur": "OZW error",
         "OZW parent eqLogic non trouvé": "OZW parent eqLogic not found",
         "Obtention SessionId pour ID": "Get SessionId for ID",
-        "Pas de commande SessionId pour l EqLogicId": "No SessionId command for the EqLogicId",
+        "Pas de commande SessionId pour l eqLogicId": "No SessionId command for the eqLogicId",
         "Pas de commande SessionId pour l\\'eqLogicId": "No SessionId command for the eqLogicId",
         "Read datapoint": "Read data point",
         "Renomme en": "Rename to",
@@ -49,9 +51,7 @@
         "Type Calendar non supporté": "Calendar type not supported",
         "Type inconnu": "Unknown type",
         "execute ": "execute ",
-        "lecture de": "reading of",
-        "non géré": "unmanaged",
-        "type": "type"
+        "lecture de": "reading of"
     },
     "plugins\/OZW\/desktop\/js\/OZW.js": {
         " Référence WEB du datapoint ?": " WEB reference for the data point?",
