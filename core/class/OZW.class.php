@@ -1,7 +1,7 @@
 <?php
 
 
-// Last Modified : 2026/09/22 19:14:37
+// Last Modified : 2026/09/23 08:06:13
 
 /*
  * Copyright (C) 2026 Bernard Dandrea
@@ -109,7 +109,7 @@ class OZW extends eqLogic
                 )
             )
         );
-        return file_get_contents(urlencode($url), false, $ctx);
+        return file_get_contents($url, false, $ctx);
     }
 
     function OZW_api($_carte, $_api, $_retry_SessionId = true)
@@ -124,7 +124,7 @@ class OZW extends eqLogic
         $statuscmd = $this->getCmd(null, 'status');
 
         $url_api = 'https://' . $_carte->getConfiguration('ip') . '/api/' . str_replace('%id%', $SessionId, $_api);
-        $json = $this->https_file_get_contents$url_api);
+        $json = $this->https_file_get_contents($url_api);
         log::add(__PLUGIN__, 'debug', __FUNCTION__ . ' ' . __('Requete', __FILE__) . ' : ' . $url_api);
         if ($json === false) {
             if (is_object($statuscmd)) {
