@@ -5,7 +5,7 @@
         "OZW eqLogic non trouvé : ": "OZW eqLogic nicht gefunden: "
     },
     "plugins\/OZW\/core\/class\/OZW.class.php": {
-        "Activation du cron de OZW": "Aktivierung des OZW-Cron-Jobs",
+        "Activation du cron de %1$s": "Aktivierung des Cron-Jobs für %1$s",
         "Adresse IP non définie pour l EqLogicId": "Für die EqLogicId ist keine IP-Adresse definiert",
         "Appareil": "Gerät",
         "Appareil déjà créé": "Gerät bereits angelegt",
@@ -21,7 +21,8 @@
         "Commande refresh déjà créée": "Befehl „refresh“ bereits erstellt",
         "Contexte": "Hintergrund",
         "Creation appareil": "Geräteerstellung",
-        "Désactivation du cron de OZW": "Deaktivierung des OZW-Cron-Jobs",
+        "Désactivation du cron de %1$s": "Deaktivierung des Cron-Jobs von %1$s",
+        "Equipement désactivé impossible d\\'éxecuter la commande :": "Gerät deaktiviert, Befehl kann nicht ausgeführt werden:",
         "Erreur de communication avec l\\'OZW": "Kommunikationsfehler mit dem OZW",
         "Erreur exécution action": "Fehler bei der Ausführung der Aktion",
         "Erreur exécution action, type non géré": "Fehler bei der Ausführung der Aktion, nicht unterstützter Typ",
@@ -32,6 +33,7 @@
         "Erreur lecture du menu": "Fehler beim Einlesen des Menüs",
         "Erreur lecture menu": "Fehler beim Lesen des Menüs",
         "Execute API sur": "API ausführen auf",
+        "Impossible de créer le RadioButton": "Der RadioButton kann nicht erstellt werden",
         "L\\'OZW ne repond pas.": "Das OZW antwortet nicht.",
         "Lancement de cron": "Cron starten",
         "Lancement de update": "Veröffentlichung eines Updates",
@@ -39,7 +41,7 @@
         "OZW erreur": "OZW-Fehler",
         "OZW parent eqLogic non trouvé": "OZW-Elternelement „eqLogic“ nicht gefunden",
         "Obtention SessionId pour ID": "Abfrage der Session-ID anhand der ID",
-        "Pas de commande SessionId pour l EqLogicId": "Kein Befehl „SessionId“ für die „EqLogicId“",
+        "Pas de commande SessionId pour l eqLogicId": "Kein Befehl „SessionId“ für die „eqLogicId“",
         "Pas de commande SessionId pour l\\'eqLogicId": "Kein Befehl „SessionId“ für die „eqLogicId“",
         "Read datapoint": "Datenpunkt auslesen",
         "Renomme en": "Umbenennen in",
@@ -49,9 +51,7 @@
         "Type Calendar non supporté": "Der Typ „Calendar“ wird nicht unterstützt",
         "Type inconnu": "Unbekannter Typ",
         "execute ": "ausführen ",
-        "lecture de": "Auslesen von",
-        "non géré": "nicht verwaltet",
-        "type": "Typ"
+        "lecture de": "Auslesen von"
     },
     "plugins\/OZW\/desktop\/js\/OZW.js": {
         " Référence WEB du datapoint ?": " WEB-Referenz des Datenpunkts?",
