@@ -1,7 +1,7 @@
 <?php
 
 
-// Last Modified : 2026/10/04 18:22:39
+// Last Modified : 2026/10/25 18:47:20
 
 /*
  * Copyright (C) 2026 Bernard Dandrea
@@ -77,7 +77,7 @@ class OZW extends eqLogic
             $count++;
         }
         $name = substr($name, 0, 100) . "..." . $count;
-        log::add(__CLASS__, 'debug', __('Renomme en', __FILE__) . ' ' . $name, 'info');
+        log::add(__CLASS__, 'info', sprintf(__('Renomme en %1$s', __FILE__), $name));
         return $name;
     }
 
@@ -88,7 +88,7 @@ class OZW extends eqLogic
         } else {
             $carte = OZW::byId($this->getConfiguration('parent'));
             if (!is_object($carte)) {
-                log::add(__CLASS__, 'debug', __('OZW parent eqLogic non trouvé', __FILE__) . ' : ' . $this->getConfiguration('parent'));
+                log::add(__CLASS__, 'debug', sprintf(__('OZW parent eqLogic non trouvé: %1$s', __FILE__), $this->getConfiguration('parent')));
                 return false;
             }
         }
@@ -110,7 +110,7 @@ class OZW extends eqLogic
 
     function OZW_api($_carte, $_api, $_retry_SessionId = true)
     {
-        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . __('Execute API sur', __FILE__) . ' ' . $_carte->getName() . ' url=' . $_api);
+        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . sprintf(__('Exécute API sur: %1$s url=%2$s', __FILE__), $_carte->getName(), $_api));
 
         $SessionId = $_carte->RetrieveSessionId();
         if ($SessionId == false) {
@@ -121,7 +121,7 @@ class OZW extends eqLogic
 
         $url_api = 'https://' . $_carte->getConfiguration('ip') . '/api/' . str_replace('%id%', $SessionId, $_api);
         $json = $this->https_file_get_contents($url_api);
-        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . __('Requete', __FILE__) . ' : ' . $url_api);
+        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . sprintf(__('Requête: %1$s', __FILE__), $url_api));
         if ($json === false) {
             if (is_object($statuscmd)) {
                 $this->checkAndUpdateCmd($statuscmd, '0');
@@ -129,19 +129,19 @@ class OZW extends eqLogic
             return false;
         }
         $obj = json_decode($json, TRUE);
-        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . 'data : ' . self::FormatArrayForLog($obj));
+        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . sprintf(__('Données reçues: %1$s', __FILE__), self::FormatArrayForLog($obj)));
         if (!isset($obj['Result']['Success']) || $obj['Result']['Success'] === "false") {
             if (isset($obj['Result']['Error']['Txt'])) {
                 // si le session ID est expiré, en récupére un nouveau et retente le call API une seule fois
                 if (($obj['Result']['Error']['Txt'] == 'session not valid') && $_retry_SessionId == true) {
-                    log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . __('Session non valide, nouvel essai avec un nouvel sessionId', __FILE__));
+                    log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . sprintf(__('Session non valide, nouvel essai avec un nouvel sessionId', __FILE__)));
                     $SessionId = $_carte->getNewSessionId();
                     if ($SessionId == false) {
                         return false;
                     }
                     return $this->OZW_api($_carte, $_api, false);
                 } else {
-                    log::add(__CLASS__, 'error', __FUNCTION__ . ' ' . __('OZW erreur', __FILE__) . ' : ' . $obj['Result']['Error']['Txt']);
+                    log::add(__CLASS__, 'error', __FUNCTION__ . ' ' . sprintf(__('OZW erreur: %1$s', __FILE__), $obj['Result']['Error']['Txt']));
                     return false;
                 }
             } else {
@@ -161,7 +161,7 @@ class OZW extends eqLogic
         $SessionIdcmd = cmd::byEqLogicIdAndLogicalId($this->getId(), 'SessionId');
 
         if (!is_object($SessionIdcmd)) {
-            log::add(__CLASS__, 'error', __('Pas de commande SessionId pour l\'eqLogicId', __FILE__) . ' ' . $this->getName());
+            log::add(__CLASS__, 'error', sprintf(__('Pas de commande SessionId pour l\'eqLogicId %1$s %2$s', __FILE__), $this->getId(), $this->getName()));
             return false;
         } else {
             $session_life_time = $this->getConfiguration('session_life_time');
@@ -181,23 +181,23 @@ class OZW extends eqLogic
 
     public function getNewSessionId()
     {
-        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . __('Obtention SessionId pour ID', __FILE__) . ' ' . $this->getId() . ' '  . $this->getName());
+        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . sprintf(__('Obtention SessionId pour ID %1$s %2$s', __FILE__), $this->getId(), $this->getName()));
         $statuscmd = $this->getCmd(null, 'status');
         $SessionIdcmd = cmd::byEqLogicIdAndLogicalId($this->getId(), 'SessionId');
 
         if (!is_object($SessionIdcmd)) {
-            log::add(__CLASS__, 'error', __('Pas de commande SessionId pour l eqLogicId', __FILE__) . ' ' . $this->getId() . ' ' . $this->getName());
+            log::add(__CLASS__, 'error', sprintf(__('Pas de commande SessionId pour l eqLogicId %1$s %2$s', __FILE__), $this->getId(), $this->getName()));
             return false;
         }
 
         if ($this->getConfiguration('ip', '') == '') {
-            log::add(__CLASS__, 'error', __('Adresse IP non définie pour l EqLogicId', __FILE__) . ' ' . $this->getId() . ' ' . $this->getName());
+            log::add(__CLASS__, 'error', sprintf(__('Adresse IP non définie pour l EqLogicId %1$s %2$s', __FILE__), $this->getId(), $this->getName()));
             return false;
         }
 
         $json  = $this->https_file_get_contents('https://' . $this->getConfiguration('ip') . '/api/auth/login.json?user=' . $this->getConfiguration('username') . '&pwd=' . $this->getConfiguration('password'));
         if ($json === false) {
-            log::add(__CLASS__, 'error', __('L\'OZW ne repond pas.', __FILE__));
+            log::add(__CLASS__, 'error', __('L\'OZW ne répond pas.', __FILE__));
             return false;
         }
         $obj = json_decode($json, TRUE);
@@ -213,7 +213,7 @@ class OZW extends eqLogic
             }
 
             if (isset($obj['Result']['Error']['Txt'])) {
-                log::add(__CLASS__, 'error', __('OZW erreur', __FILE__) . ' : ' . $obj['Result']['Error']['Txt']);
+                log::add(__CLASS__, 'error',sprintf(__('OZW erreur: %1$s', __FILE__), $obj['Result']['Error']['Txt']));
             } else {
                 log::add(__CLASS__, 'error', __('Erreur de communication avec l\'OZW', __FILE__));
             }
@@ -233,7 +233,7 @@ class OZW extends eqLogic
             $added = 0;
             foreach ($obj['Devices'] as $item) {
                 if (!is_object(self::byLogicalId($item['SerialNr'], 'OZW'))) {
-                    log::add(__CLASS__, 'info', __('Creation appareil', __FILE__) . ' : ' . $item['Type'] . ' (' .  $item['SerialNr']  . ')');
+                    log::add(__CLASS__, 'info', sprintf(__('Creation appareil: %1$s (%2$s)', __FILE__), $item['Type'], $item['SerialNr']));
                     $eqLogic = (new OZW())
                         ->setLogicalId($item['SerialNr'])
                         ->setName(trim($item['Type'] . ' ' . $item['SerialNr']))   // BD 20230927
@@ -246,16 +246,16 @@ class OZW extends eqLogic
                         ->setIsVisible(1);
                     $eqLogic->save();
                     $added++;
-                    log::add(__CLASS__, 'info', __('Appareil importé: serial number =', __FILE__)  . ' : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')');
+                    log::add(__CLASS__, 'info', sprintf(__('Appareil importé: serial number = %1$s', __FILE__), $item['SerialNr']));
                 } else {
-                    log::add(__CLASS__, 'info', __('Appareil déjà créé', __FILE__) . ' : ' . $item['Name'] . ' (' .  $item['SerialNr']  . ')');
+                    log::add(__CLASS__, 'info', sprintf(__('Appareil déjà créé: %1$s (%2$s)', __FILE__), $item['Name'], $item['SerialNr']));
                 }
             }
-            $return = __('Appareils importés: ', __FILE__) . ' : ' . (string)$added;
+            $return = sprintf(__('Appareils importés: %1$s', __FILE__), (string)$added);
             log::add(__CLASS__, 'info', $return);
             return 'OK ' . $return;
         } else {
-            $return = __('Erreur lecture du device', __FILE__) . ' ' . $this->getName() . ' ' . self::FormatArrayForLog($obj);
+            $return = sprintf(__('Erreur lecture du device: %1$s', __FILE__), $this->getName());
             log::add(__CLASS__, 'error',  $return);
             return 'KO ' . $return;
         }
@@ -267,24 +267,24 @@ class OZW extends eqLogic
         log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . $this->getName());
         $carte = $this->getParent();
         if ($carte == false) {
-            return 'KO ' . __('OZW parent eqLogic non trouvé', __FILE__) . ' : ' . $this->getConfiguration('parent');
+            return 'KO ' . sprintf(__('OZW parent eqLogic non trouvé: %1$s', __FILE__), $this->getConfiguration('parent'));
         }
 
         $obj = OZW::OZW_api($carte, 'menutree/device_root.json?SessionId=%id%&SerialNumber=' . $this->getConfiguration('SerialNr') . '&TreeName=Mobile');
         if ($obj == false) {
-            return 'KO ' . __('Erreur lecture du device', __FILE__) . ' ' . $this->getName() . ' ' . $this->getConfiguration('SerialNr');
+            return 'KO ' . sprintf(__('Erreur lecture du device: %1$s %2$s', __FILE__), $this->getName(), $this->getConfiguration('SerialNr'));
         }
 
         if ($obj['Result']['Success'] == 'true') {
             if (isset($obj['TreeItem']['Id'])) {
                 $this->MenuImport($obj['TreeItem']['Id']);
             } else {
-                $return = __('Ne trouve pas le', __FILE__) . ' TreeItem : ' . $obj['Result']['Error']['Txt'];
+                $return = sprintf(__('Ne trouve pas le TreeItem: %1$s', __FILE__), $obj['Result']['Error']['Txt']);
                 log::add(__CLASS__, 'debug', $return);
                 return 'KO ' . $return;
             }
         } else {
-            $return = __('Erreur lecture des commandes principales', __FILE__) . ' ' . $this->getName() . ' ' . self::FormatArrayForLog($obj);
+            $return = sprintf(__('Erreur lecture des commandes principales: %1$s %2$s %3$s', __FILE__), $this->getName(), $this->getConfiguration('SerialNr'), self::FormatArrayForLog($obj));
             log::add(__CLASS__, 'error',  $return);
             return 'KO ' . $return;
         }
@@ -296,12 +296,12 @@ class OZW extends eqLogic
 
         $carte = $this->getParent();
         if ($carte == false) {
-            return 'KO ' . __('OZW parent eqLogic non trouvé', __FILE__) . ' : ' . $this->getConfiguration('parent');
+            return 'KO ' . sprintf(__('OZW parent eqLogic non trouvé: %1$s', __FILE__), $this->getConfiguration('parent'));
         }
 
         $obj = OZW::OZW_api($carte, 'menutree/list.json?SessionId=%id%&Id=' . $menu_id);
         if ($obj == false) {
-            return 'KO ' . __('Erreur lecture du menu', __FILE__) . ' ' . $this->getName() . ' ' . $this->getConfiguration('SerialNr');
+            return 'KO ' . sprintf(__('Erreur lecture du menu: %1$s %2$s', __FILE__), $this->getName(), $this->getConfiguration('SerialNr'));
         }
         if (isset($obj['DatapointItems'])) {
             foreach ($obj['DatapointItems'] as $item) {
@@ -315,7 +315,7 @@ class OZW extends eqLogic
             }
             return 'OK';
         } else {
-            $return = __('Erreur lecture menu', __FILE__) . ' ' . $this->getName() . ' ' . self::FormatArrayForLog($obj);
+            $return = sprintf(__('Erreur lecture menu: %1$s %2$s %3$s', __FILE__), $this->getName(), $this->getConfiguration('SerialNr'), self::FormatArrayForLog($obj));
             log::add(__CLASS__, 'error',  $return);
             return 'KO ' . $return;
         }
@@ -323,13 +323,13 @@ class OZW extends eqLogic
 
     public function create_command($id_commande, $info, $action, $refresh)
     {
-        log::add(__CLASS__, 'info', __FUNCTION__ . ' ' . $this->getName() . ' Commande ' . $id_commande . ' Info ' . $info . ' Action ' . $action . ' Refresh ' . $refresh);
+        log::add(__CLASS__, 'info', sprintf(__('Création commande: %1$s %2$s %3$s %4$s', __FILE__), $this->getName(), $id_commande, $info, $action, $refresh));
 
         $return = 'KO';
 
         $carte = $this->getParent();
         if ($carte == false) {
-            return 'KO ' . __('OZW parent eqLogic non trouvé', __FILE__) . ' : ' . $this->getConfiguration('parent');
+            return 'KO ' . sprintf(__('OZW parent eqLogic non trouvé: %1$s', __FILE__), $this->getConfiguration('parent'));
         }
         //    $carte->getSessionId();
         if ($info != '') {
@@ -348,7 +348,7 @@ class OZW extends eqLogic
 
     {
         if (is_object(cmd::byEqLogicIdAndLogicalId($this->getId(), $item_id))) {
-            $return = __('Commande info déjà créée', __FILE__) . ' ' . $item_id;
+            $return = sprintf(__('Commande info déjà créée: %1$s', __FILE__), $item_id) ;
             log::add(__CLASS__, 'info', __FUNCTION__ . ' ' . $return);
             return 'KO ' . $return;
         }
@@ -356,7 +356,7 @@ class OZW extends eqLogic
         // lit la description du datapoint
         $obj_detail = OZW::OZW_api($carte, 'menutree/datapoint_desc.json?SessionId=%id%&Id=' . $item_id);
         if ($obj_detail == false) {
-            return 'KO ' . __('Erreur lecture datapoint', __FILE__) . ' ' . $item_id;
+            return 'KO ' . sprintf(__('Erreur lecture datapoint: %1$s', __FILE__), $item_id);
         }
 
         $type = $obj_detail['Description']['Type'];
@@ -455,16 +455,16 @@ class OZW extends eqLogic
                     return 'KO ' . $return;
                     break;
                 default:
-                    $return = __('Type inconnu', __FILE__) . ' ' . $type;
+                    $return = sprintf(__('Type inconnu: %1$s', __FILE__), $type);
                     log::add(__CLASS__, 'error', $return);
                     return 'KO ' . $return;
                     break;
             }
-            $return = __('Commande info créée', __FILE__) . ' ' . $item_id;
+            $return = sprintf(__('Commande info créée: %1$s', __FILE__), $item_id);
             log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . $return);
             return 'OK ' . $return;
         } else {
-            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . self::FormatArrayForLog($obj_detail);
+            $return = sprintf(__('Erreur lecture datapoint: %1$s %2$s', __FILE__), $item_id, self::FormatArrayForLog($obj_detail));
             log::add(__CLASS__, 'error',  $return);
             return 'KO ' . $return;
         }
@@ -474,7 +474,7 @@ class OZW extends eqLogic
     {
 
         if (is_object(cmd::byEqLogicIdAndLogicalId($this->getId(), 'A_' . $item_id))) {
-            $return = __('Commande action déjà créée', __FILE__) . ' ' . $item_id;
+            $return = sprintf(__('Commande action déjà créée: %1$s', __FILE__), $item_id) ;
             log::add(__CLASS__, 'info', __FUNCTION__ . ' ' . $return);
             return 'KO ' . $return;
         }
@@ -482,7 +482,7 @@ class OZW extends eqLogic
         // lit la description du datapoint
         $obj_detail = OZW::OZW_api($carte, 'menutree/datapoint_desc.json?SessionId=%id%&Id=' . $item_id);
         if ($obj_detail == false) {
-            return 'KO ' . __('Erreur lecture datapoint', __FILE__) . ' ' . $item_id;
+            return 'KO ' . sprintf(__('Erreur lecture datapoint: %1$s', __FILE__), $item_id);
         }
 
         $type = $obj_detail['Description']['Type'];
@@ -559,16 +559,16 @@ class OZW extends eqLogic
                     $cmd->save();
                     break;
                 default:
-                    $return = __('Type inconnu', __FILE__) . ' ' . $type;
+                    $return = sprintf(__('Type inconnu: %1$s', __FILE__), $type);
                     log::add(__CLASS__, 'error', $return);
                     return 'KO ' . $return;
                     break;
             }
-            $return = __('Commande action créée', __FILE__) . ' ' . $item_id;
+            $return = sprintf(__('Commande action créée: %1$s', __FILE__), $item_id);
             log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . $return);
             return 'OK ' . $return;
         } else {
-            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . self::FormatArrayForLog($obj_detail);
+            $return = sprintf(__('Erreur lecture datapoint: %1$s %2$s', __FILE__), $item_id, self::FormatArrayForLog($obj_detail));
             log::add(__CLASS__, 'error',  $return);
             return 'KO ' . $return;
         }
@@ -578,7 +578,7 @@ class OZW extends eqLogic
     {
 
         if (is_object(cmd::byEqLogicIdAndLogicalId($this->getId(), 'R_' . $item_id))) {
-            $return = __('Commande refresh déjà créée', __FILE__) . ' ' . $item_id;
+            $return = sprintf(__('Commande refresh déjà créée: %1$s', __FILE__), $item_id);
             log::add(__CLASS__, 'info', __FUNCTION__ . ' ' . $return);
             return 'KO ' . $return;
         }
@@ -586,7 +586,7 @@ class OZW extends eqLogic
         // lit la description du datapoint
         $obj_detail = OZW::OZW_api($carte, 'menutree/datapoint_desc.json?SessionId=%id%&Id=' . $item_id);
         if ($obj_detail == false) {
-            return 'KO ' . __('Erreur lecture datapoint', __FILE__) . ' ' . $item_id;
+            return 'KO ' . sprintf(__('Erreur lecture datapoint: %1$s', __FILE__), $item_id);
         }
 
         $type = $obj_detail['Description']['Type'];
@@ -605,7 +605,7 @@ class OZW extends eqLogic
 
             $cmd->setName(self::getUniqueCmdName($this->getId(), $name));
 
-            $return = __('Commande refresh ', __FILE__) . ' ' . $item_id . ' uniqname ' . $cmd->getName();
+            $return = sprintf(__('Commande refresh créée: %1$s uniqname: %2$s', __FILE__), $item_id, $cmd->getName());
             $cmd->setEqLogic_id($this->getId());
             $cmd->setLogicalId('R_' . $item_id);   // le logical id est égal à 'R_' plus l'id du datapoint
             $cmd->setConfiguration('infoId', $item_id);
@@ -617,11 +617,11 @@ class OZW extends eqLogic
             $cmd->setConfiguration('minValue', '0');
             $cmd->setConfiguration('maxValue', '60');
             $cmd->save();
-            $return = __('Commande refresh créée', __FILE__) . ' ' . $item_id;
+            $return = sprintf(__('Commande refresh créée: %1$s uniqname: %2$s', __FILE__), $item_id, $cmd->getName());
             log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . $return);
             return 'OK ' . $return;
         } else {
-            $return = __('Erreur lecture datapoint', __FILE__) . ' ' . self::FormatArrayForLog($obj_detail);
+            $return = sprintf(__('Erreur lecture datapoint: %1$s %2$s', __FILE__), $item_id, self::FormatArrayForLog($obj_detail));
             log::add(__CLASS__, 'error',  $return);
             return 'KO ' . $return;
         }
@@ -738,7 +738,7 @@ class OZW extends eqLogic
 
     public static function OZW_Update($_eqLogic, $_context = 'cron')
     {
-        log::add(__CLASS__, 'info', __FUNCTION__ . ' ' . __('Appareil', __FILE__) . ' : ' . $_eqLogic->getName() . ' ' . __('Contexte', __FILE__) . ' ' . $_context);
+        log::add(__CLASS__, 'info', __FUNCTION__ . ' ' . sprintf(__('Appareil: %1$s Contexte: %2$s', __FILE__), $_eqLogic->getName(), $_context));
 
 
         $carte = $_eqLogic->getParent();
@@ -797,13 +797,13 @@ class OZW extends eqLogic
 
     function refresh_info_cmd($_carte, $_cmd)
     {
-        log::add(__CLASS__, 'debug', __FUNCTION__ . ' ' . __('Read datapoint', __FILE__) . ' ' . $_cmd->getLogicalId() . ' ' . $_cmd->getName());
+        log::add(__CLASS__, 'debug', sprintf(__('Read datapoint: %1$s %2$s', __FILE__), $_cmd->getLogicalId(), $_cmd->getName()));
         $obj = OZW::OZW_api($_carte, 'menutree/read_datapoint.json?&SessionId=%id%&Id=' . $_cmd->getLogicalId());
         if ($obj == false) {
             return false;
         }
         if (isset($obj['Result']['Success']) && $obj['Result']['Success'] !== "false") {
-            log::add(__CLASS__, 'info', __FUNCTION__ . ' ' . __('lecture de', __FILE__) . ' ' . $_cmd->getLogicalId() . ' ' . $_cmd->getName() . ' --> ' . $obj['Data']['Value']);
+            log::add(__CLASS__, 'info', sprintf(__('lecture de: %1$s %2$s %3$s', __FILE__), $_cmd->getLogicalId(), $_cmd->getName(), $obj['Data']['Value']));
             $this->checkAndUpdateCmd($_cmd, $obj['Data']['Value']);
             return true;
         } else {
@@ -822,7 +822,7 @@ class OZWCmd extends cmd
 
         $eqLogic = $this->getEqLogic();
         if (!is_object($eqLogic) || $eqLogic->getIsEnable() != 1) {
-            throw new \Exception(__('Equipement désactivé impossible d\'éxecuter la commande :', __FILE__) . $this->getHumanName());
+            throw new \Exception(sprintf(__('Equipement désactivé impossible d\'éxecuter la commande : %1$s', __FILE__), $this->getHumanName()));
         }
 
         $carte = $eqLogic->getParent();
@@ -832,7 +832,7 @@ class OZWCmd extends cmd
 
         // Refresh toutes les infos
         if ($this->getLogicalId() == 'refresh') {
-            log::add($plugin, 'info', __('execute ', __FILE__) . '  refresh');
+            log::add($plugin, 'info', sprintf(__('Exécute %1$s', __FILE__), '  refresh'));
             return OZW::OZW_Update($eqLogic, 'refresh');
         }
 
@@ -842,7 +842,7 @@ class OZWCmd extends cmd
 
             $cmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $internalid);
             if (!is_object($cmd)) {
-                log::add($plugin, 'debug', __('Commande non trouvée', __FILE__) . ' ' . $internalid);
+                log::add($plugin, 'debug', sprintf(__('Commande non trouvée: %1$s', __FILE__), $internalid));
                 return false;
             }
             return $eqLogic->refresh_info_cmd($carte, $cmd);
@@ -869,7 +869,7 @@ class OZWCmd extends cmd
                     $url = 'menutree/write_datapoint.json?SessionId=%id%&Id=' . $internalid . '&Type=String&Value=' . $_options['message'];
                     break;
                 default:
-                    log::add($plugin, 'error', __('Erreur exécution action, type non géré', __FILE__) . ' : ' . $this->getConfiguration('internal_type'));
+                    log::add($plugin, 'error', sprintf(__('Erreur exécution action, type non géré: %1$s', __FILE__), $this->getConfiguration('internal_type')));
                     return false;
                     break;
             }
@@ -879,7 +879,7 @@ class OZWCmd extends cmd
                     return false;
                 }
                 if (!isset($obj['Result']['Success']) || $obj['Result']['Success'] !== "true") {
-                    log::add($plugin, 'error', __('Erreur exécution action',  __FILE__) . ' : ' . $obj['Result']['Error']['Txt']);
+                    log::add($plugin, 'error', sprintf(__('Erreur exécution action: %1$s', __FILE__), $obj['Result']['Error']['Txt']));
                     return false;
                 }
             }
