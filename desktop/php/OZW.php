@@ -1,4 +1,13 @@
 <?php
+
+// Last Modified : 2026/08/22 18:43:48
+
+/*
+ * Copyright (C) 2026 Bernard Dandrea
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * https://www.gnu.org/licenses/gpl-3.0.html
+ */
+
 if (!isConnect('admin')) {
   throw new Exception('{{401 - Accès non autorisé}}');
 }
@@ -69,11 +78,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
     <!-- barre de gestion de l'équipement -->
     <div class="input-group pull-right" style="display:inline-flex;">
       <span class="input-group-btn">
-        <!-- Les balises <a></a> sont volontairement fermées à la ligne suivante pour éviter les espaces entre les boutons. Ne pas modifier -->
+        <!--
+        Ne pas ajouter de retour à la ligne ni d'espace entre les balises </a> et <a>.
+        Les boutons sont volontairement adjacents pour éviter un espace
+        visuel entre eux avec le rendu inline/inline-block de Bootstrap.
+        -->
+        <!-- Pas de duplication, il faut passer par la synchronisation      -->
         <a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fas fa-cogs"></i><span class="hidden-xs"> {{Configuration avancée}}</span>
         </a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}
-        </a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}
-        </a>
+        </a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
       </span>
     </div>
     <!-- Onglets -->
@@ -135,102 +148,87 @@ $eqLogics = eqLogic::byType($plugin->getId());
               </div>
               <div class="form-group">
                 <label class="col-sm-4 control-label"></label>
-                <div class="col-sm-4">
-                  <a class="btn btn-default carte_only" id="bt_gotoOZW" '><i class="fa fa-cogs"> {{Accéder à l'OZW}}</i></a>
-                  <a class="btn btn-default carte_only" id="bt_devices_import" ><i class="fa fa-refresh"> {{Importer les devices}}</i></a>
-                  <a class="btn btn-default nocarte_only" id="bt_main_commands_import" ><i class="fas fa-plus-circle"> {{Importer les commandes principales}}</i></a>
-                  <a class="btn btn-default nocarte_only" id="bt_MenuImport" ><i class="fas fa-plus-circle"> {{Importer un menu}}</i></a>
+                <div class="col-sm-8">
+                  <a class="btn btn-default cursor carte_only" id="bt_gotoOZW"><i class="fa fa-cogs"></i> {{Accéder à l'OZW}}</a>
+                  <a class="btn btn-default cursor carte_only" id="bt_devices_import"><i class="fa fa-refresh"></i> {{Importer les devices}}</a>
+                  <a class="btn btn-default cursor nocarte_only" id="bt_main_commands_import"><i class="fas fa-plus-circle"></i> {{Importer les commandes principales}}</a>
+                  <a class="btn btn-default cursor nocarte_only" id="bt_MenuImport"><i class="fas fa-plus-circle"></i> {{Importer un menu}}</a>
                 </div>
               </div>
 
               <div class="form-group carte_only">
                 <label class="col-sm-4 control-label">{{IP de l'OZW}}</label>
                 <div class="col-sm-6">
-                  <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip"">
+                  <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="ip">
                 </div>
               </div>
 
               <div class=" form-group carte_only">
-                  <label class="col-sm-4 control-label">{{Compte de l'OZW}}</label>
-                  <div class="col-sm-6">
-                    <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="username" />
-                  </div>
+                <label class="col-sm-4 control-label">{{Compte de l'OZW}}</label>
+                <div class="col-sm-6">
+                  <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="username" />
                 </div>
-                <div class="form-group carte_only">
-                  <label class="col-sm-4 control-label">{{Password de l'OZW}}</label>
-                  <div class="col-sm-6">
-                    <input type="password" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="password" />
-                  </div>
-                </div>
-
-                <div class=" form-group carte_only">
-                  <label class="col-sm-4 control-label">{{Durée de la session (en heures)}}</label>
-                  <div class="col-sm-6">
-                    <input type="numeric" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="session_life_time" />
-                  </div>
-                </div>
-                
-                <div class=" form-group">
-                  <label class="col-sm-4 control-label">{{Icône}}</label>
-                  <div class="col-sm-6">
-                    <select id="sel_icon" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="icon"> 
-                      <option value="none">{{Aucun}}</option> 
-                      <option value="OZW672">{{OZW672}}</option> 
-                      <option value="OZW772">{{OZW772}}</option> 
-                      <option value="Chaudiere">{{Chaudière}}</option> 
-                      <option value="PAC">{{Pompe à chaleur}}</option> 
-                      <option value="Climatisation">{{Climatisation}}</option> 
-                      <option value="Perso1">{{Perso1}}</option> 
-                      <option value="Perso2">{{Perso2}}</option> 
-                      <option value="Perso3">{{Perso3}}</option> 
-                      <option value="Perso4">{{Perso4}}</option> 
-                    </select> 
-                  </div>
-                </div>
-                
               </div>
+              <div class="form-group carte_only">
+                <label class="col-sm-4 control-label">{{Password de l'OZW}}</label>
+                <div class="col-sm-6">
+                  <input type="password" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="password" />
+                </div>
+              </div>
+
+              <div class=" form-group carte_only">
+                <label class="col-sm-4 control-label">{{Durée de la session (en heures)}}</label>
+                <div class="col-sm-6">
+                  <input type="number" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="session_life_time" />
+                </div>
+              </div>
+
+              <div class=" form-group">
+                <label class="col-sm-4 control-label">{{Icône}}</label>
+                <div class="col-sm-6">
+                  <select id="sel_icon" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="icon">
+                    <option value="none">{{Aucun}}</option>
+                    <option value="OZW672">OZW672</option>
+                    <option value="OZW772">OZW772</option>
+                    <option value="Chaudiere">{{Chaudière}}</option>
+                    <option value="PAC">{{Pompe à chaleur}}</option>
+                    <option value="Climatisation">{{Climatisation}}</option>
+                    <option value="Perso1">{{Perso1}}</option>
+                    <option value="Perso2">{{Perso2}}</option>
+                    <option value="Perso3">{{Perso3}}</option>
+                    <option value="Perso4">{{Perso4}}</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
           </fieldset>
         </form>
       </div><!-- /.tabpanel #eqlogictab-->
 
       <!-- Onglet des commandes de l' équipement -->
-                    <div role="tabpanel" class="tab-pane" id="commandtab">
-                      <div class="input-group pull-right" style="display:inline-flex;margin-top:5px;">
-                        <span class="input-group-btn">
-                          <a class="btn btn-info btn-xs roundedLeft nocarte_only" id="bt_create_info_command" title=' {{Importer un datapoint}}'><i class="fas fa-plus-circle"> {{Importer un datapoint}}</i></a>
-                          <a class="btn btn-info btn-xs roundedLeft nocarte_only" id="bt_create_action_command"><i class="fas fa-plus-circle"></i> {{Ajouter une action}}
-                            <a class="btn btn-info btn-xs roundedLeft nocarte_only" id="bt_create_refresh_command"><i class="fas fa-plus-circle"></i> {{Ajouter une commande refresh}}
-                            </a>
-                        </span>
-                      </div>
-                      <br><br>
-                      <div class="table-responsive">
-                        <table id="table_cmd" class="table table-bordered table-condensed">
-                          <thead>
-                            <tr>
-                              <th class="hidden-xs" style="min-width:50px;width:70px;">ID</th>
-                              <th style="min-width:200px;width:350px;">{{Nom}}</th>
-                              <th>{{logicalID}}</th>
-                              <th>{{Type}}</th>
-                              <th style="min-width:260px;">{{Options}}</th>
-                              <th class="nocarte_only">{{Scan}}</th>
-                              <th>{{Valeur}}
-                              </th>
-                              <th style="min-width:80px;width:200px;">{{Actions}}</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div><!-- /.tabpanel #commandtab-->
+      <div role="tabpanel" class="tab-pane" id="commandtab">
+        <div class="input-group pull-right" style="display:inline-flex;margin-top:5px;">
+          <span class="input-group-btn">
+            <a class="btn btn-info btn-xs roundedLeft nocarte_only" id="bt_create_info_command" title="{{Importer un datapoint}}"><i class="fas fa-plus-circle"></i> {{Importer un datapoint}}</a>
+            <a class="btn btn-info btn-xs roundedLeft nocarte_only" id="bt_create_action_command"><i class="fas fa-plus-circle"></i> {{Ajouter une action}}</a>
+            <a class="btn btn-info btn-xs roundedLeft nocarte_only" id="bt_create_refresh_command"><i class="fas fa-plus-circle"></i> {{Ajouter une commande refresh}}</a>
+          </span>
+        </div>
+        <br><br>
+        <div class="table-responsive">
+          <table id="table_cmd" class="table table-bordered table-condensed">
 
-                </div><!-- /.tab-content -->
-              </div><!-- /.eqLogic -->
-            </div><!-- /.row row-overflow -->
+          </table>
+        </div>
+      </div><!-- /.tabpanel #commandtab-->
 
-            <!-- Inclusion du fichier javascript du plugin (dossier, nom_du_fichier, extension_du_fichier, id_du_plugin) -->
-            <?php
-            include_file('desktop', 'OZW', 'js', 'OZW');
-            include_file('core', 'plugin.template', 'js');
-            ?>
+    </div><!-- /.tab-content -->
+  </div><!-- /.eqLogic -->
+</div><!-- /.row row-overflow -->
+
+<!-- Inclusion du fichier javascript du plugin (dossier, nom_du_fichier, extension_du_fichier, id_du_plugin) -->
+<?php
+include_file('desktop', 'OZW', 'js', 'OZW');
+include_file('core', 'plugin.template', 'js');
+?>
